@@ -1,0 +1,18 @@
+{
+  "name": "com.portgatestudios.portgatelib",
+  "version": "1.0.0",
+  "displayName": "PortgateLib",
+  "description": "Some of my common modules bundled into a package for easier reuse.",
+  "unity": "2020.1",
+  "unityRelease": "1f1",
+  "keywords": [
+	"utility",
+	"common",
+	"portgate"
+  ],
+  "author": {
+	"name": "Portgate Studios",
+	"email": "info@portgatestudios.com",
+	"url": "https://www.portgatestudios.com"
+  }
+}
