@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace FileBasedPrefs
+namespace PortgateLib.FileBasedPrefs
 {
 	public class FilePrefsDialog : EditorWindow
 	{

@@ -1,8 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using UnityEngine;
-using System;
 
-namespace FileBasedPrefs
+namespace PortgateLib.FileBasedPrefs
 {
 	public static class FilePrefs
 	{

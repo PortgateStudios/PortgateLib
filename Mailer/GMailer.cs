@@ -1,4 +1,4 @@
-namespace Mailer
+namespace PortgateLib.Mailer
 {
 	public class GMailerOptions
 	{

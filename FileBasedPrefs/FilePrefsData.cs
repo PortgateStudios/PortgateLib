@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace FileBasedPrefs
+namespace PortgateLib.FileBasedPrefs
 {
 	[Serializable]
 	public class FilePrefsData

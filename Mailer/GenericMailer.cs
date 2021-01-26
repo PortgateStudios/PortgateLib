@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Mail;
 
-namespace Mailer
+namespace PortgateLib.Mailer
 {
 	public class MailerOptions
 	{
