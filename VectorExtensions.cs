@@ -5,6 +5,28 @@ namespace PortgateLib
 {
 	public static class VectorExtensions
 	{
+		#region Converters
+
+		public static Vector3 ToVector3(this Vector3Int vector)
+		{
+			return (Vector3)vector;
+		}
+
+		public static Vector2 ToVector2(this Vector2Int vector)
+		{
+			return (Vector2)vector;
+		}
+
+		public static Vector3 ToVector3XZ(this Vector2Int vector)
+		{
+			return new Vector3(vector.x, 0, vector.y);
+		}
+
+		public static Vector3 ToVector3XZ(this Vector2 vector)
+		{
+			return new Vector3(vector.x, 0, vector.y);
+		}
+
 		public static Vector2 ToVector2XZ(this Vector3 vector)
 		{
 			return new Vector2(vector.x, vector.z);
@@ -25,20 +47,21 @@ namespace PortgateLib
 			return new Vector3Int(vector.x, vector.y, 0);
 		}
 
-		public static Vector3 ToVector3XZ(this Vector2Int vector)
-		{
-			return new Vector3(vector.x, 0, vector.y);
-		}
+		#endregion
+		#region Opposite
 
-		public static Vector3 ToVector3XZ(this Vector2 vector)
+		public static Vector2 Opposite(this Vector2 vector)
 		{
-			return new Vector3(vector.x, 0, vector.y);
+			return new Vector2(-vector.x, -vector.y);
 		}
 
 		public static Vector2Int Opposite(this Vector2Int vector)
 		{
 			return new Vector2Int(-vector.x, -vector.y);
 		}
+
+		#endregion
+		#region Coordinate changers
 
 		public static Vector3 WithX(this Vector3 vector, float x)
 		{
@@ -55,6 +78,9 @@ namespace PortgateLib
 			return new Vector3(vector.x, vector.y, z);
 		}
 
+		#endregion
+		#region Direction & Distance
+
 		public static Vector3 GetDirectionTo(this Vector3 a, Vector3 b)
 		{
 			return (b - a).normalized;
@@ -65,12 +91,54 @@ namespace PortgateLib
 			return (b - a).magnitude;
 		}
 
-		public static Quaternion ToRotation(this Vector2 direction, Vector3 axis)
+		#endregion
+		#region Rotation
+
+		public static Quaternion ToLookRotation3D(this Vector3 direction)
 		{
-			float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-			float finalAngle = angle - 180;
-			return Quaternion.AngleAxis(finalAngle, axis);
+			return Quaternion.LookRotation(direction);
 		}
+
+		public static Quaternion ToLookRotation3D(this Vector2 direction)
+		{
+			return direction.ToVector3XZ().ToLookRotation3D();
+		}
+
+		public static Quaternion ToLookRotation3D(this Vector2Int direction)
+		{
+			return direction.ToVector3XZ().ToLookRotation3D();
+		}
+
+		public static Quaternion ToLookRotation2D(this Vector3 direction)
+		{
+			var rotationY = Quaternion.LookRotation(direction);
+			return Quaternion.Euler(0, 0, -rotationY.eulerAngles.y);
+		}
+
+		public static Quaternion ToLookRotation2D(this Vector2 direction)
+		{
+			return direction.ToVector3XZ().ToLookRotation2D();
+		}
+
+		public static Quaternion ToLookRotation2D(this Vector2Int direction)
+		{
+			return direction.ToVector3XZ().ToLookRotation2D();
+		}
+
+		public static Quaternion FromIsometricToUIRotation(this Vector2 direction)
+		{
+			// due to isometric camera, rotate it with 45 degrees.
+			var rotation = direction.ToLookRotation3D() * Quaternion.Euler(0, 45, 0);
+			return Quaternion.Euler(0, 0, -rotation.eulerAngles.y);
+		}
+
+		public static Quaternion FromIsometricToUIRotation(this Vector2Int direction)
+		{
+			return direction.ToVector2().FromIsometricToUIRotation();
+		}
+
+		#endregion
+		#region Rotating
 
 		public static Vector2 RotateAround(this Vector2 point, float angle, Vector2 pivot = default)
 		{
@@ -123,5 +191,7 @@ namespace PortgateLib
 			dir += pivot;
 			return dir;
 		}
+
+		#endregion
 	}
 }
