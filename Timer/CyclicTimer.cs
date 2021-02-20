@@ -29,7 +29,7 @@ namespace PortgateLib.Timer
 		private float remainingDuration = -1;
 		private OnFinished onFinishedCallback;
 
-		public CyclicTimer(float duration, float cycleTime, OnTick onTickCallback, OnFinished onFinishedCallback) : base(cycleTime, onTickCallback)
+		public CyclicTimer(float duration, float cycleTime, OnTick onTickCallback, OnFinished onFinishedCallback = null) : base(cycleTime, onTickCallback)
 		{
 			if (duration < 0)
 			{
@@ -53,7 +53,7 @@ namespace PortgateLib.Timer
 		public override void Finish()
 		{
 			Stop();
-			onFinishedCallback();
+			CallOnFinishedCallback();
 		}
 
 		public override void Update()
@@ -62,6 +62,14 @@ namespace PortgateLib.Timer
 			remainingDuration -= Time.deltaTime;
 			base.Update();
 			if (remainingDuration < 0)
+			{
+				CallOnFinishedCallback();
+			}
+		}
+
+		private void CallOnFinishedCallback()
+		{
+			if (onFinishedCallback != null)
 			{
 				onFinishedCallback();
 			}
