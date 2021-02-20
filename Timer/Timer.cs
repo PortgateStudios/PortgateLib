@@ -6,7 +6,7 @@ namespace PortgateLib.Timer
 	{
 		public delegate void OnFinished();
 
-		public float Duration
+		public virtual float Duration
 		{
 			get { return duration; }
 		}

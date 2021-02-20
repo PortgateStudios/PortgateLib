@@ -7,6 +7,11 @@ namespace PortgateLib.Timer
 	{
 		public delegate void OnTick();
 
+		public override float Duration
+		{
+			get { throw new Exception("Duration is invalid for InfiniteTimer."); }
+		}
+
 		public override float ElapsedTime
 		{
 			get { return elapsedTime; }

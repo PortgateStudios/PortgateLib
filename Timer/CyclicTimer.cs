@@ -4,6 +4,11 @@ namespace PortgateLib.Timer
 {
 	public class CyclicTimer : InfiniteTimer
 	{
+		public override float Duration
+		{
+			get { return duration; }
+		}
+
 		public override float ElapsedTime
 		{
 			get { return duration - remainingDuration; }
