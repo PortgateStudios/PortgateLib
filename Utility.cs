@@ -43,6 +43,48 @@ namespace PortgateLib
 			return str;
 		}
 
+		public static string ToJSON(this string[] array)
+		{
+			var str = "[";
+			for (int i = 0; i < array.Length; i++)
+			{
+				str += $"\"{array[i]}\"";
+				var isntTheLastElement = i != array.Length - 1;
+				if (isntTheLastElement)
+				{
+					str += ", ";
+				}
+			}
+			str += "]";
+			return str;
+		}
+
+		public static int ModifyInCyclicRange(this int value, int amount, int min, int max)
+		{
+			var translation = min < 0 ? -min : 0;
+			var newMax = max + translation;
+			value += translation;
+
+			// Now we can work in the (0 ... max + translation) range where it's easier to do stuff.
+
+			var newValue = value + amount;
+			var maxLimit = newMax + 1;
+
+			if (newValue < 0)
+			{
+				var delta = Mathf.Abs(newValue);
+				var remainder = delta % maxLimit;
+				newValue = maxLimit - remainder;
+			}
+			else if (newValue >= maxLimit)
+			{
+				newValue = newValue % maxLimit;
+			}
+
+			newValue -= translation;
+			return newValue;
+		}
+
 		public static int CountLetter(this string str, char character)
 		{
 			int count = 0;
