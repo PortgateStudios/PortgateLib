@@ -37,7 +37,7 @@ namespace PortgateLib.Timer
 		private OnFinished onFinishedCallback;
 		private float elapsedTime;
 
-		public Timer(float duration, OnFinished onFinishedCallback)
+		public Timer(float duration, OnFinished onFinishedCallback = null)
 		{
 			if (duration < 0)
 			{
@@ -61,7 +61,7 @@ namespace PortgateLib.Timer
 		public virtual void Finish()
 		{
 			Stop();
-			onFinishedCallback();
+			CallOnFinishedCallback();
 		}
 
 		public virtual void Update()
@@ -73,8 +73,16 @@ namespace PortgateLib.Timer
 				elapsedTime += Time.deltaTime;
 				if (currentTime < 0 && onFinishedCallback != null)
 				{
-					onFinishedCallback();
+					CallOnFinishedCallback();
 				}
+			}
+		}
+
+		private void CallOnFinishedCallback()
+		{
+			if (onFinishedCallback != null)
+			{
+				onFinishedCallback();
 			}
 		}
 
