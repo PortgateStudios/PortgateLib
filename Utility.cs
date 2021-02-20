@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Security.Cryptography;
+using System.Text;
+using UnityEngine;
 
 namespace PortgateLib
 {
@@ -57,6 +59,24 @@ namespace PortgateLib
 			}
 			str += "]";
 			return str;
+		}
+
+		public static string ComputeMD5Hash(this string input)
+		{
+			// Use input string to calculate MD5 hash
+			using (var md5 = MD5.Create())
+			{
+				var inputBytes = Encoding.ASCII.GetBytes(input);
+				var hashBytes = md5.ComputeHash(inputBytes);
+
+				// Convert the byte array to hexadecimal string
+				var sb = new StringBuilder();
+				for (int i = 0; i < hashBytes.Length; i++)
+				{
+					sb.Append(hashBytes[i].ToString("X2"));
+				}
+				return sb.ToString();
+			}
 		}
 
 		public static int ModifyInCyclicRange(this int value, int amount, int min, int max)
