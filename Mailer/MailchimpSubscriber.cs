@@ -73,16 +73,31 @@ namespace PortgateLib.Mailer
 			SubscribeResult? result = null;
 			await Task.Run(() =>
 			{
-				CheckListID(listID);
-				result = TrySubscribing(listID, email, firstName, lastName, EmailType.HTML);
+				if (CheckListID(listID))
+				{
+					result = TrySubscribing(listID, email, firstName, lastName, EmailType.HTML);
+				}
+				else
+				{
+					result = SubscribeResult.ERROR;
+				}
 			});
 			onFinished(result.Value);
 		}
 
-		private void CheckListID(string listID)
+		private bool CheckListID(string listID)
 		{
 			var path = $"lists/{listID}";
-			CallMailChimpAPI("GET", path);
+			try
+			{
+				CallMailChimpAPI("GET", path);
+				return true;
+			}
+			catch (WebException e)
+			{
+				Debug.LogError(e.ToString());
+				return false;
+			}
 		}
 
 		private SubscribeResult TrySubscribing(string listID, string email, string firstName, string lastName, EmailType emailType)
