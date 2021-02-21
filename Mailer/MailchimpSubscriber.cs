@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace PortgateLib.Mailer
@@ -75,7 +76,17 @@ namespace PortgateLib.Mailer
 			CallMailChimpAPI("GET", path);
 		}
 
-		public SubscribeResult TrySubscribing(string email, string firstName, string lastName, EmailType emailType)
+		public async void TrySubscribing(string email, string firstName, string lastName, EmailType emailType, Action<SubscribeResult> onFinished)
+		{
+			SubscribeResult? result = null;
+			await Task.Run(() =>
+			{
+				result = TrySubscribing(email, firstName, lastName, EmailType.HTML);
+			});
+			onFinished(result.Value);
+		}
+
+		private SubscribeResult TrySubscribing(string email, string firstName, string lastName, EmailType emailType)
 		{
 			var md5Hash = email.ComputeMD5Hash();
 			var path = $"lists/{listID}/members/{md5Hash}";
