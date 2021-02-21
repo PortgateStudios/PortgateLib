@@ -60,33 +60,31 @@ namespace PortgateLib.Mailer
 
 		private readonly string apiKey;
 		private readonly string dataCenter;
-		private readonly string listID;
 
-		public MailchimpSubscriber(string apiKey, string dataCenter, string listID)
+		public MailchimpSubscriber(string apiKey, string dataCenter)
 		{
 			this.apiKey = apiKey;
 			this.dataCenter = dataCenter;
-			this.listID = listID;
-			CheckListID();
 		}
 
-		private void CheckListID()
+		public async void TrySubscribing(string listID, string email, string firstName, string lastName, EmailType emailType, Action<SubscribeResult> onFinished)
+		{
+			SubscribeResult? result = null;
+			await Task.Run(() =>
+			{
+				CheckListID(listID);
+				result = TrySubscribing(listID, email, firstName, lastName, EmailType.HTML);
+			});
+			onFinished(result.Value);
+		}
+
+		private void CheckListID(string listID)
 		{
 			var path = $"lists/{listID}";
 			CallMailChimpAPI("GET", path);
 		}
 
-		public async void TrySubscribing(string email, string firstName, string lastName, EmailType emailType, Action<SubscribeResult> onFinished)
-		{
-			SubscribeResult? result = null;
-			await Task.Run(() =>
-			{
-				result = TrySubscribing(email, firstName, lastName, EmailType.HTML);
-			});
-			onFinished(result.Value);
-		}
-
-		private SubscribeResult TrySubscribing(string email, string firstName, string lastName, EmailType emailType)
+		private SubscribeResult TrySubscribing(string listID, string email, string firstName, string lastName, EmailType emailType)
 		{
 			var md5Hash = email.ComputeMD5Hash();
 			var path = $"lists/{listID}/members/{md5Hash}";
