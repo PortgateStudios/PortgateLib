@@ -22,7 +22,8 @@ namespace PortgateLib.Mailer
 			ALREADY_SUBSCRIBED,
 			WAS_UNSUBSCRIBED_NOW_PENDING,
 			WAS_ARCHIVED_NOW_PENDING,
-			UNHANDLED_CASE
+			UNHANDLED_CASE,
+			ERROR
 		}
 
 		enum member_status
@@ -124,9 +125,13 @@ namespace PortgateLib.Mailer
 					ChangeMemberStatus(path, email, member_status.pending, firstName, lastName, emailType);
 					return SubscribeResult.PENDING;
 				}
-				else // some problematic exception
+				else
 				{
-					throw e;
+					// idea:
+					// BadRequest can mean that the email got deleted, and in this case we can't resubscribe it via API because it counts as an import.
+					// (Because if users quit the list on their own, we shouldn't be able to reimport them)
+					// https://wordpress.org/support/topic/mailchimp-api-error-400-bad-request-forgotten-email-not-subscribed/
+					return SubscribeResult.ERROR;
 				}
 			}
 		}
