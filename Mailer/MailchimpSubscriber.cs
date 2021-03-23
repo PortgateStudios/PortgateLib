@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -68,8 +69,13 @@ namespace PortgateLib.Mailer
 			this.dataCenter = dataCenter;
 		}
 
-		public async void TrySubscribing(string listID, string email, string firstName, string lastName, EmailType emailType, Action<SubscribeResult> onFinished)
+		public async void TrySubscribing(string listID, string email, string firstName, string lastName, EmailType emailType, Action<SubscribeResult> onFinished, Action onIllFormattedEmail)
 		{
+			if (!ValidateEmail(email))
+			{
+				onIllFormattedEmail();
+				return;
+			}
 			SubscribeResult? result = null;
 			await Task.Run(() =>
 			{
@@ -83,6 +89,19 @@ namespace PortgateLib.Mailer
 				}
 			});
 			onFinished(result.Value);
+		}
+
+		private bool ValidateEmail(string email)
+		{
+			try
+			{
+				var address = new MailAddress(email);
+				return address.Address == email;
+			}
+			catch
+			{
+				return false;
+			}
 		}
 
 		private bool CheckListID(string listID)
