@@ -16,15 +16,20 @@ namespace PortgateLib.Mailer
 			TEXT
 		}
 
+		public enum ValidationError
+		{
+			EmailIllFormatted
+		}
+
 		public enum SubscribeResult
 		{
-			PENDING,
-			RESET_PENDING,
-			ALREADY_SUBSCRIBED,
-			WAS_UNSUBSCRIBED_NOW_PENDING,
-			WAS_ARCHIVED_NOW_PENDING,
-			UNHANDLED_CASE,
-			ERROR
+			Pending,
+			ResetPending,
+			AlreadySubscribed,
+			WasUnsubscribedNowPending,
+			WasArchivedNowPending,
+			UnhandledCase,
+			Error
 		}
 
 		enum member_status
@@ -69,26 +74,39 @@ namespace PortgateLib.Mailer
 			this.dataCenter = dataCenter;
 		}
 
-		public async void TrySubscribing(string listID, string email, string firstName, string lastName, EmailType emailType, Action<SubscribeResult> onFinished, Action onIllFormattedEmail)
+		public async void TrySubscribing(string listID, string email, string firstName, string lastName, EmailType emailType, Action onValidationSuccess, Action<ValidationError> onValidationError, Action<SubscribeResult> onAPICallFinished)
+		{
+			var validated = ValidateInput(email, onValidationSuccess, onValidationError);
+			if (validated)
+			{
+				SubscribeResult? result = null;
+				await Task.Run(() =>
+				{
+					if (CheckListID(listID))
+					{
+						result = TrySubscribing(listID, email, firstName, lastName, EmailType.HTML);
+					}
+					else
+					{
+						result = SubscribeResult.Error;
+					}
+				});
+				onAPICallFinished(result.Value);
+			}
+		}
+
+		private bool ValidateInput(string email, Action onSuccess, Action<ValidationError> onError)
 		{
 			if (!ValidateEmail(email))
 			{
-				onIllFormattedEmail();
-				return;
+				onError(ValidationError.EmailIllFormatted);
+				return false;
 			}
-			SubscribeResult? result = null;
-			await Task.Run(() =>
+			else
 			{
-				if (CheckListID(listID))
-				{
-					result = TrySubscribing(listID, email, firstName, lastName, EmailType.HTML);
-				}
-				else
-				{
-					result = SubscribeResult.ERROR;
-				}
-			});
-			onFinished(result.Value);
+				onSuccess();
+				return true;
+			}
 		}
 
 		private bool ValidateEmail(string email)
@@ -132,23 +150,23 @@ namespace PortgateLib.Mailer
 				{
 					ChangeMemberStatus(path, email, member_status.unsubscribed, firstName, lastName, emailType);
 					ChangeMemberStatus(path, email, member_status.pending, firstName, lastName, emailType);
-					return SubscribeResult.RESET_PENDING;
+					return SubscribeResult.ResetPending;
 				}
 				else if (member_status == member_status.subscribed)
 				{
-					return SubscribeResult.ALREADY_SUBSCRIBED;
+					return SubscribeResult.AlreadySubscribed;
 				}
 				else if (member_status == member_status.unsubscribed)
 				{
 					ChangeMemberStatus(path, email, member_status.pending, firstName, lastName, emailType);
-					return SubscribeResult.WAS_UNSUBSCRIBED_NOW_PENDING;
+					return SubscribeResult.WasUnsubscribedNowPending;
 				}
 				else if (member_status == member_status.archived)
 				{
 					ChangeMemberStatus(path, email, member_status.pending, firstName, lastName, emailType);
-					return SubscribeResult.WAS_ARCHIVED_NOW_PENDING;
+					return SubscribeResult.WasArchivedNowPending;
 				}
-				return SubscribeResult.UNHANDLED_CASE;
+				return SubscribeResult.UnhandledCase;
 			}
 			catch (WebException e)
 			{
@@ -157,7 +175,7 @@ namespace PortgateLib.Mailer
 				if (memberNotFound)
 				{
 					ChangeMemberStatus(path, email, member_status.pending, firstName, lastName, emailType);
-					return SubscribeResult.PENDING;
+					return SubscribeResult.Pending;
 				}
 				else
 				{
@@ -165,7 +183,7 @@ namespace PortgateLib.Mailer
 					// BadRequest can mean that the email got deleted, and in this case we can't resubscribe it via API because it counts as an import.
 					// (Because if users quit the list on their own, we shouldn't be able to reimport them)
 					// https://wordpress.org/support/topic/mailchimp-api-error-400-bad-request-forgotten-email-not-subscribed/
-					return SubscribeResult.ERROR;
+					return SubscribeResult.Error;
 				}
 			}
 		}
