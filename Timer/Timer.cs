@@ -70,7 +70,7 @@ namespace PortgateLib.Timer
 			{
 				currentTime -= Time.deltaTime;
 				elapsedTime += Time.deltaTime;
-				if (currentTime < 0 && onFinishedCallback != null)
+				if (currentTime < 0)
 				{
 					CallOnFinishedCallback();
 				}
