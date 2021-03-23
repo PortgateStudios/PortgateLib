@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace PortgateLib.Timer
 {
@@ -27,9 +28,9 @@ namespace PortgateLib.Timer
 		private readonly float duration;
 		private float cycleTime = -1;
 		private float remainingDuration = -1;
-		private OnFinished onFinishedCallback;
+		private Action onFinishedCallback;
 
-		public CyclicTimer(float duration, float cycleTime, OnTick onTickCallback, OnFinished onFinishedCallback = null) : base(cycleTime, onTickCallback)
+		public CyclicTimer(float duration, float cycleTime, OnTick onTickCallback, Action onFinishedCallback = null) : base(cycleTime, onTickCallback)
 		{
 			if (duration < 0)
 			{

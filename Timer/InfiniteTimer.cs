@@ -5,8 +5,6 @@ namespace PortgateLib.Timer
 {
 	public class InfiniteTimer : Timer
 	{
-		public delegate void OnTick();
-
 		public override float Duration
 		{
 			get { throw new Exception("Duration is invalid for InfiniteTimer."); }
@@ -46,9 +44,9 @@ namespace PortgateLib.Timer
 		private readonly float cycleTime = -1;
 		private float elapsedTime = 0;
 		private bool stopped = true;
-		private OnTick onTickCallback;
+		private Action onTickCallback;
 
-		public InfiniteTimer(float cycleTime, OnTick onTickCallback) : base(cycleTime, null)
+		public InfiniteTimer(float cycleTime, Action onTickCallback) : base(cycleTime, null)
 		{
 			if (cycleTime < 0)
 			{

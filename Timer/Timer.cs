@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace PortgateLib.Timer
@@ -34,10 +35,10 @@ namespace PortgateLib.Timer
 
 		protected float currentTime = -1;
 		private readonly float duration;
-		private OnFinished onFinishedCallback;
+		private Action onFinishedCallback;
 		private float elapsedTime;
 
-		public Timer(float duration, OnFinished onFinishedCallback = null)
+		public Timer(float duration, Action onFinishedCallback = null)
 		{
 			if (duration < 0)
 			{
@@ -86,7 +87,7 @@ namespace PortgateLib.Timer
 			}
 		}
 
-		protected void SetOnFinishedCallback(OnFinished onFinishedCallback)
+		protected void SetOnFinishedCallback(Action onFinishedCallback)
 		{
 			this.onFinishedCallback = onFinishedCallback;
 		}
