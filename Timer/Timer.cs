@@ -38,9 +38,9 @@ namespace PortgateLib.Timer
 
 		public Timer(float duration, Action onFinishedCallback = null)
 		{
-			if (duration <= 0)
+			if (duration < 0)
 			{
-				throw new Exception("Duration must be positive!");
+				throw new Exception("Duration is negative!");
 			}
 			this.duration = duration;
 			this.onFinishedCallback = onFinishedCallback;
@@ -65,14 +65,19 @@ namespace PortgateLib.Timer
 
 		public virtual void Update()
 		{
-			if (IsRunning)
+			if (currentTime > 0)
 			{
 				currentTime -= Time.deltaTime;
 				elapsedTime += Time.deltaTime;
-				if (currentTime <= 0)
+				if (currentTime < 0)
 				{
 					OnFinished();
 				}
+			}
+			else if (Mathf.Approximately(currentTime, 0))
+			{
+				currentTime = -1;
+				OnFinished();
 			}
 		}
 

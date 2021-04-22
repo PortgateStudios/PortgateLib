@@ -30,11 +30,11 @@ namespace PortgateLib.Timer
 		private float remainingDuration = -1;
 		private Action onFinishedCallback;
 
-		public CyclicTimer(float duration, float cycleTime, OnTick onTickCallback, Action onFinishedCallback = null) : base(cycleTime, onTickCallback)
+		public CyclicTimer(float duration, float cycleTime, Action onTickCallback, Action onFinishedCallback = null) : base(cycleTime, onTickCallback)
 		{
-			if (duration <= 0)
+			if (duration < 0)
 			{
-				throw new Exception("Duration must be positive!.");
+				throw new Exception("Duration is negative!");
 			}
 			this.duration = duration;
 			this.onFinishedCallback = onFinishedCallback;
@@ -59,14 +59,19 @@ namespace PortgateLib.Timer
 
 		public override void Update()
 		{
-			if (IsRunning)
+			if (remainingDuration > 0)
 			{
 				remainingDuration -= Time.deltaTime;
 				base.Update();
-				if (remainingDuration <= 0)
+				if (remainingDuration < 0)
 				{
 					OnFinished();
 				}
+			}
+			else if (Mathf.Approximately(remainingDuration, 0))
+			{
+				remainingDuration = -1;
+				OnFinished();
 			}
 		}
 
