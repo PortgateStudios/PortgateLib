@@ -22,28 +22,21 @@ namespace PortgateLib.Timer
 
 		public virtual float RemainingPercent
 		{
-			get
-			{
-				if (Mathf.Approximately(Duration, 0))
-					return 0;
-				else
-					return RemainingTime / Duration;
-			}
+			get { return GetRemainingPercent(); }
 		}
 
 		public virtual float ElapsedTime
 		{
-			get { return Duration - RemainingTime; }
+			get { return duration - remainingTime; }
 		}
 
 		public virtual float ElapsedPercent
 		{
-			get { return 1f - RemainingPercent; }
+			get { return 1f - GetRemainingPercent(); }
 		}
 
-		protected float remainingTime = -1;
-
 		private readonly float duration;
+		private float remainingTime = -1;
 		private Action onFinishedCallback;
 
 		public Timer(float duration, Action onFinishedCallback = null)
@@ -100,6 +93,14 @@ namespace PortgateLib.Timer
 		protected void SetOnFinishedCallback(Action onFinishedCallback)
 		{
 			this.onFinishedCallback = onFinishedCallback;
+		}
+
+		private float GetRemainingPercent()
+		{
+			if (Mathf.Approximately(duration, 0))
+				return 0;
+			else
+				return remainingTime / duration;
 		}
 	}
 }
