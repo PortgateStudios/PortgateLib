@@ -60,24 +60,23 @@ namespace PortgateLib.Timer
 		public virtual void Finish()
 		{
 			Stop();
-			CallOnFinishedCallback();
+			OnFinished();
 		}
 
 		public virtual void Update()
 		{
-			if (!IsRunning) return;
-			if (currentTime > 0)
+			if (IsRunning)
 			{
 				currentTime -= Time.deltaTime;
 				elapsedTime += Time.deltaTime;
-				if (currentTime < 0)
+				if (currentTime <= 0)
 				{
-					CallOnFinishedCallback();
+					OnFinished();
 				}
 			}
 		}
 
-		private void CallOnFinishedCallback()
+		private void OnFinished()
 		{
 			if (onFinishedCallback != null)
 			{

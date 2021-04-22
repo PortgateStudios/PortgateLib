@@ -54,21 +54,23 @@ namespace PortgateLib.Timer
 		public override void Finish()
 		{
 			Stop();
-			CallOnFinishedCallback();
+			OnFinished();
 		}
 
 		public override void Update()
 		{
-			if (!IsRunning) return;
-			remainingDuration -= Time.deltaTime;
-			base.Update();
-			if (remainingDuration < 0)
+			if (IsRunning)
 			{
-				CallOnFinishedCallback();
+				remainingDuration -= Time.deltaTime;
+				base.Update();
+				if (remainingDuration <= 0)
+				{
+					OnFinished();
+				}
 			}
 		}
 
-		private void CallOnFinishedCallback()
+		private void OnFinished()
 		{
 			if (onFinishedCallback != null)
 			{
