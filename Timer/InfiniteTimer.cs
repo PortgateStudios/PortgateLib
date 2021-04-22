@@ -10,6 +10,21 @@ namespace PortgateLib.Timer
 			get { throw new Exception("Duration is invalid for InfiniteTimer."); }
 		}
 
+		public override bool IsRunning
+		{
+			get { return !stopped; }
+		}
+
+		public override float RemainingTime
+		{
+			get { throw new Exception("RemainingTime is invalid for InfiniteTimer."); }
+		}
+
+		public override float RemainingPercent
+		{
+			get { throw new Exception("RemainingPercent is invalid for InfiniteTimer."); }
+		}
+
 		public override float ElapsedTime
 		{
 			get { return elapsedTime; }
@@ -30,18 +45,6 @@ namespace PortgateLib.Timer
 			get { return base.ElapsedPercent; }
 		}
 
-		public override bool IsRunning
-		{
-			get { return !stopped; }
-		}
-
-		[Obsolete("Do not use this for calculations. Ticks happen at irregular intervals, CycleTime is just a desired interval, not the real. Use ElapsedCycleTime.", true)] // todo: do something with this
-		public float CycleTime
-		{
-			get { return cycleTime; }
-		}
-
-		private readonly float cycleTime = -1;
 		private float elapsedTime = 0;
 		private bool stopped = true;
 		private Action onTickCallback;
@@ -52,7 +55,6 @@ namespace PortgateLib.Timer
 			{
 				throw new Exception("CycleTime is negative!");
 			}
-			this.cycleTime = cycleTime;
 			this.onTickCallback = onTickCallback;
 			SetOnFinishedCallback(OnCycleEnded);
 		}

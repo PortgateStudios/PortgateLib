@@ -10,31 +10,41 @@ namespace PortgateLib.Timer
 			get { return duration; }
 		}
 
+		public virtual bool IsRunning
+		{
+			get { return remainingTime >= 0; }
+		}
+
+		public virtual float RemainingTime
+		{
+			get { return remainingTime; }
+		}
+
+		public virtual float RemainingPercent
+		{
+			get
+			{
+				if (Mathf.Approximately(Duration, 0))
+					return 0;
+				else
+					return RemainingTime / Duration;
+			}
+		}
+
 		public virtual float ElapsedTime
 		{
-			get { return elapsedTime; }
+			get { return Duration - RemainingTime; }
 		}
 
 		public virtual float ElapsedPercent
 		{
-			get
-			{
-				if (Mathf.Approximately(duration, 0))
-					return 1;
-				else
-					return Mathf.Max(0, Mathf.Min(1, elapsedTime / duration));
-			}
+			get { return 1f - RemainingPercent; }
 		}
 
-		public virtual bool IsRunning
-		{
-			get { return currentTime > 0; }
-		}
+		protected float remainingTime = -1;
 
-		protected float currentTime = -1;
 		private readonly float duration;
 		private Action onFinishedCallback;
-		private float elapsedTime;
 
 		public Timer(float duration, Action onFinishedCallback = null)
 		{
@@ -48,13 +58,12 @@ namespace PortgateLib.Timer
 
 		public virtual void ResetStart()
 		{
-			currentTime = duration;
-			elapsedTime = 0;
+			remainingTime = duration;
 		}
 
 		public virtual void Stop()
 		{
-			currentTime = -1;
+			remainingTime = -1;
 		}
 
 		public virtual void Finish()
@@ -65,18 +74,17 @@ namespace PortgateLib.Timer
 
 		public virtual void Update()
 		{
-			if (currentTime > 0)
+			if (remainingTime > 0)
 			{
-				currentTime -= Time.deltaTime;
-				elapsedTime += Time.deltaTime;
-				if (currentTime < 0)
+				remainingTime -= Time.deltaTime;
+				if (remainingTime < 0)
 				{
 					OnFinished();
 				}
 			}
-			else if (Mathf.Approximately(currentTime, 0))
+			else if (Mathf.Approximately(remainingTime, 0))
 			{
-				currentTime = -1;
+				remainingTime = -1;
 				OnFinished();
 			}
 		}

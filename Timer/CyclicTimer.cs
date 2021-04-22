@@ -10,23 +10,38 @@ namespace PortgateLib.Timer
 			get { return duration; }
 		}
 
+		public override bool IsRunning
+		{
+			get { return remainingDuration >= 0; }
+		}
+
+		public override float RemainingTime
+		{
+			get { return remainingDuration; }
+		}
+
+		public override float RemainingPercent
+		{
+			get
+			{
+				if (Mathf.Approximately(Duration, 0))
+					return 0;
+				else
+					return RemainingTime / Duration;
+			}
+		}
+
 		public override float ElapsedTime
 		{
-			get { return duration - remainingDuration; }
+			get { return Duration - RemainingTime; }
 		}
 
 		public override float ElapsedPercent
 		{
-			get { return Mathf.Max(0, ElapsedTime / duration); }
-		}
-
-		public override bool IsRunning
-		{
-			get { return remainingDuration > 0; }
+			get { return 1f - RemainingPercent; }
 		}
 
 		private readonly float duration;
-		private float cycleTime = -1;
 		private float remainingDuration = -1;
 		private Action onFinishedCallback;
 
