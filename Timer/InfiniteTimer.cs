@@ -48,9 +48,9 @@ namespace PortgateLib.Timer
 
 		public InfiniteTimer(float cycleTime, Action onTickCallback) : base(cycleTime, null)
 		{
-			if (cycleTime < 0)
+			if (cycleTime <= 0)
 			{
-				Debug.Log("CycleTime is negative.");
+				throw new Exception("CycleTime must be positive!.");
 			}
 			this.cycleTime = cycleTime;
 			this.onTickCallback = onTickCallback;

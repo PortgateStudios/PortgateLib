@@ -32,9 +32,9 @@ namespace PortgateLib.Timer
 
 		public CyclicTimer(float duration, float cycleTime, OnTick onTickCallback, Action onFinishedCallback = null) : base(cycleTime, onTickCallback)
 		{
-			if (duration < 0)
+			if (duration <= 0)
 			{
-				Debug.Log("Duration is negative.");
+				throw new Exception("Duration must be positive!.");
 			}
 			this.duration = duration;
 			this.onFinishedCallback = onFinishedCallback;

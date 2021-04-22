@@ -38,9 +38,9 @@ namespace PortgateLib.Timer
 
 		public Timer(float duration, Action onFinishedCallback = null)
 		{
-			if (duration < 0)
+			if (duration <= 0)
 			{
-				Debug.Log("Time is negative.");
+				throw new Exception("Duration must be positive!");
 			}
 			this.duration = duration;
 			this.onFinishedCallback = onFinishedCallback;
