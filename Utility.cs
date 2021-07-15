@@ -8,27 +8,6 @@ namespace PortgateLib
 	{
 		// Extensions
 
-		public static T[] Shuffle<T>(this T[] array)
-		{
-			int n = array.Length;
-			var result = new T[n];
-			array.CopyTo(result, 0);
-			while (n > 1)
-			{
-				int k = Random.Range(0, n--);
-				T temp = result[n];
-				result[n] = result[k];
-				result[k] = temp;
-			}
-			return result;
-		}
-
-		public static T GetRandomElement<T>(this T[] array)
-		{
-			var index = Random.Range(0, array.Length);
-			return array[index];
-		}
-
 		public static string ToJSON(this int[] array)
 		{
 			var str = "[";
