@@ -1,5 +1,7 @@
-﻿using System.Security.Cryptography;
+﻿using System;
+using System.Linq;
 using System.Text;
+using System.Security.Cryptography;
 using UnityEngine;
 
 namespace PortgateLib
@@ -142,6 +144,51 @@ namespace PortgateLib
 			rotatedTexture.SetPixels32(rotated);
 			rotatedTexture.Apply();
 			return rotatedTexture;
+		}
+
+		public static T[] GetEnumValues<T>()
+		{
+			return Enum.GetValues(typeof(T)).Cast<T>().ToArray();
+		}
+
+		public static void DestroyChildren(this Transform transform)
+		{
+			var childCount = transform.childCount;
+			for (var i = 0; i < childCount; i++)
+			{
+				var child = transform.GetChild(0);
+				GameObject.Destroy(child.gameObject);
+			}
+		}
+
+		public static void DestroyChildrenImmediate(this Transform transform)
+		{
+			var childCount = transform.childCount;
+			for (var i = 0; i < childCount; i++)
+			{
+				var child = transform.GetChild(0);
+				GameObject.DestroyImmediate(child.gameObject);
+			}
+		}
+
+		// Index starts at 0.
+		public static bool IsDigitZero(this float value, int indexOfDigit)
+		{
+			var multiplier = Mathf.Pow(10, indexOfDigit + 1);
+			var integer = (int)(value * multiplier);
+			return integer % multiplier == 0 ? true : false;
+		}
+
+		public static string GetPath(this GameObject gameObject)
+		{
+			var path = $"{gameObject.name}";
+			var parent = gameObject.transform.parent;
+			while (parent != null)
+			{
+				path = $"{parent.name}/{path}";
+				parent = parent.parent;
+			}
+			return path;
 		}
 	}
 }
