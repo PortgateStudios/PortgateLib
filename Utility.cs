@@ -135,5 +135,34 @@ namespace PortgateLib
 			var isRightAngle = Mathf.Approximately(dot, 0);
 			return isRightAngle;
 		}
+
+		public static Sprite ConvertTextureToSprite(Texture2D texture)
+		{
+			var rectangle = new Rect(0, 0, texture.width, texture.height);
+			return Sprite.Create(texture, rectangle, new Vector2(0.5f, 0.5f), 100);
+		}
+
+		public static Texture2D RotateTexture(Texture2D originalTexture, bool clockwise)
+		{
+			var original = originalTexture.GetPixels32();
+			var rotated = new Color32[original.Length];
+			var w = originalTexture.width;
+			var h = originalTexture.height;
+
+			for (var j = 0; j < h; ++j)
+			{
+				for (var i = 0; i < w; ++i)
+				{
+					var iRotated = (i + 1) * h - j - 1;
+					var iOriginal = clockwise ? original.Length - 1 - (j * w + i) : j * w + i;
+					rotated[iRotated] = original[iOriginal];
+				}
+			}
+
+			var rotatedTexture = new Texture2D(h, w);
+			rotatedTexture.SetPixels32(rotated);
+			rotatedTexture.Apply();
+			return rotatedTexture;
+		}
 	}
 }
