@@ -190,5 +190,46 @@ namespace PortgateLib
 			}
 			return path;
 		}
+
+		public static string SecondsToMinuteSecondString(float seconds)
+		{
+			var t = TimeSpan.FromSeconds(seconds);
+			var text = string.Format("{0:D2}:{1:D2}", t.Minutes, t.Seconds);
+			return text;
+		}
+
+		public static string ToStringOrNull(this object obj)
+		{
+			return obj == null ? "null" : obj.ToString();
+		}
+
+		public static string BytesToString(ulong bytes)
+		{
+			var gb = bytes / 1024f / 1024f / 1024f;
+			if (gb > 1)
+			{
+				return $"{gb.ToString("0.00")} GB";
+			}
+			else
+			{
+				var mb = bytes / 1024f / 1024f;
+				if (mb > 1)
+				{
+					return $"{mb.ToString("0.00")} MB";
+				}
+				else
+				{
+					var kb = bytes / 1024f;
+					if (kb > 1)
+					{
+						return $"{kb.ToString("0.00")} KB";
+					}
+					else
+					{
+						return $"{bytes.ToString("0.00")} B";
+					}
+				}
+			}
+		}
 	}
 }
