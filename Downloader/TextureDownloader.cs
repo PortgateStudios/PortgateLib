@@ -15,8 +15,6 @@ namespace PortgateLib.Downloader
 				{
 					yield return webRequest.SendWebRequest();
 
-					var connectionError = webRequest.result == UnityWebRequest.Result.ConnectionError;
-					var protocolError = webRequest.result == UnityWebRequest.Result.ProtocolError;
 					if (webRequest.result == UnityWebRequest.Result.Success)
 					{
 						var texture = DownloadHandlerTexture.GetContent(webRequest);
