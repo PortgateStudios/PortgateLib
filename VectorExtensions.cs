@@ -18,7 +18,6 @@ namespace PortgateLib
 		{
 			return new Vector2(vector.x, vector.y);
 		}
-
 		
 		// Vector2 Converters
 
@@ -123,6 +122,8 @@ namespace PortgateLib
 		#endregion
 		#region Rotation
 
+		// 3D Mode
+
 		public static Quaternion ToLookRotation3D(this Vector3 direction)
 		{
 			return Quaternion.LookRotation(direction);
@@ -138,20 +139,23 @@ namespace PortgateLib
 			return direction.ToVector3XZ().ToLookRotation3D();
 		}
 
-		public static Quaternion ToLookRotation2D(this Vector3 direction)
-		{
-			var rotationY = Quaternion.LookRotation(direction);
-			return Quaternion.Euler(0, 0, -rotationY.eulerAngles.y);
-		}
+		// 2D Mode
 
 		public static Quaternion ToLookRotation2D(this Vector2 direction)
 		{
-			return direction.ToVector3XZ().ToLookRotation2D();
+			var directionXZ = direction.ToVector3XZ();
+			var rotationY = Quaternion.LookRotation(directionXZ);
+			return Quaternion.Euler(0, 0, -rotationY.eulerAngles.y);
+		}
+
+		public static Quaternion ToLookRotation2D(this Vector3 direction)
+		{
+			return direction.ToVector2XY().ToLookRotation2D();
 		}
 
 		public static Quaternion ToLookRotation2D(this Vector2Int direction)
 		{
-			return direction.ToVector3XZ().ToLookRotation2D();
+			return direction.ToVector2().ToLookRotation2D();
 		}
 
 		public static Quaternion FromIsometricToUIRotation(this Vector2 direction)
