@@ -7,25 +7,7 @@ namespace PortgateLib
 	{
 		#region Converters
 
-		public static Vector3 ToVector3(this Vector3Int vector)
-		{
-			return (Vector3)vector;
-		}
-
-		public static Vector2 ToVector2(this Vector2Int vector)
-		{
-			return (Vector2)vector;
-		}
-
-		public static Vector3 ToVector3XZ(this Vector2Int vector)
-		{
-			return new Vector3(vector.x, 0, vector.y);
-		}
-
-		public static Vector3 ToVector3XZ(this Vector2 vector)
-		{
-			return new Vector3(vector.x, 0, vector.y);
-		}
+		// Vector3 Converters
 
 		public static Vector2 ToVector2XZ(this Vector3 vector)
 		{
@@ -37,9 +19,46 @@ namespace PortgateLib
 			return new Vector2(vector.x, vector.y);
 		}
 
+		
+		// Vector2 Converters
+
+		public static Vector3 ToVector3XZ(this Vector2 vector)
+		{
+			return new Vector3(vector.x, 0, vector.y);
+		}
+
+		public static Vector3 ToVector3XY(this Vector2 vector)
+		{
+			return new Vector3(vector.x, vector.y, 0);
+		}
+
+		// Vector3Int Converters
+
+		public static Vector3 ToVector3(this Vector3Int vector)
+		{
+			return new Vector3(vector.x, vector.y, vector.z);
+		}
+
 		public static Vector2Int ToVector2IntXY(this Vector3Int vector)
 		{
 			return new Vector2Int(vector.x, vector.y);
+		}
+
+		// Vector2Int Converters
+
+		public static Vector2 ToVector2(this Vector2Int vector)
+		{
+			return new Vector2(vector.x, vector.y);
+		}
+
+		public static Vector3 ToVector3XZ(this Vector2Int vector)
+		{
+			return new Vector3(vector.x, 0, vector.y);
+		}
+
+		public static Vector3 ToVector3XY(this Vector2Int vector)
+		{
+			return new Vector3(vector.x, vector.y, 0);
 		}
 
 		public static Vector3Int ToVector3IntXY(this Vector2Int vector)
@@ -81,9 +100,19 @@ namespace PortgateLib
 		#endregion
 		#region Direction & Distance
 
+		public static Vector3 GetDirectionTo(this Vector2 a, Vector2 b)
+		{
+			return (b - a).normalized;
+		}
+
 		public static Vector3 GetDirectionTo(this Vector3 a, Vector3 b)
 		{
 			return (b - a).normalized;
+		}
+
+		public static float GetDistanceTo(this Vector2 a, Vector2 b)
+		{
+			return (b - a).magnitude;
 		}
 
 		public static float GetDistanceTo(this Vector3 a, Vector3 b)
@@ -190,6 +219,16 @@ namespace PortgateLib
 
 			dir += pivot;
 			return dir;
+		}
+
+		#endregion
+		#region Line
+
+		public static Vector2 GetFurthestPointInLine(this Vector2 a, Vector2 b, float maxDistance)
+		{
+			var distanceVector = b - a;
+			var clampedDistanceVector = Vector2.ClampMagnitude(distanceVector, maxDistance);
+			return a + clampedDistanceVector;
 		}
 
 		#endregion
