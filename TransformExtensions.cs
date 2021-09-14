@@ -1,4 +1,6 @@
-﻿namespace PortgateLib
+﻿using UnityEngine;
+
+namespace PortgateLib
 {
 	public static class TransformExtensions
 	{
