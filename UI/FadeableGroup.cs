@@ -70,11 +70,7 @@ namespace PortgateLib.UI
 		private void OnFadeFinished()
 		{
 			canvasGroup.alpha = targetAlpha;
-			if (onFadeFinishedCallback != null)
-			{
-				onFadeFinishedCallback();
-			}
-			onFadeFinishedCallback = null;
+			onFadeFinishedCallback?.Invoke();
 		}
 
 		public void SetVisible(bool visible)
@@ -97,8 +93,8 @@ namespace PortgateLib.UI
 
 		public void StartFading(float targetAlpha, Action onFadeFinishedCallback = null)
 		{
-			this.onFadeFinishedCallback = onFadeFinishedCallback;
 			this.targetAlpha = targetAlpha;
+			this.onFadeFinishedCallback = onFadeFinishedCallback;
 
 			var interactable = targetAlpha > 0.95f ? true : false;
 			canvasGroup.interactable = interactable;
