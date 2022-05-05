@@ -5,6 +5,13 @@ namespace PortgateLib.FileBasedPrefs
 {
 	public class FilePrefsDialog : EditorWindow
 	{
+		[MenuItem("PortgateLib/Open File Prefs Dialog")]
+		private static void CreateFilePrefsDialog()
+		{
+			var window = ScriptableObject.CreateInstance<FilePrefsDialog>();
+			window.ShowUtility();
+		}
+
 		private string resultMessage = "";
 		private string setKeyText = "Enter key...";
 		private string setKeyValueText = "Enter value...";
@@ -77,13 +84,6 @@ namespace PortgateLib.FileBasedPrefs
 			GUILayout.Space(15);
 
 			EditorGUILayout.LabelField(resultMessage, centeredStyle);
-		}
-
-		[MenuItem("File Based Prefs/Open dialog")]
-		private static void CreateFilePrefsDialog()
-		{
-			var window = ScriptableObject.CreateInstance<FilePrefsDialog>();
-			window.ShowUtility();
 		}
 	}
 }
