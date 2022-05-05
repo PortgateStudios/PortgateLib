@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Security.Cryptography;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace PortgateLib
 {
@@ -198,9 +199,14 @@ namespace PortgateLib
 			return text;
 		}
 
-		public static string ToStringOrNull(this object obj)
+		public static string TryToString(this object obj)
 		{
 			return obj == null ? "null" : obj.ToString();
+		}
+
+		public static string TryGettingName(this MonoBehaviour behaviour)
+		{
+			return behaviour == null ? "null" : behaviour.name;
 		}
 
 		public static string BytesToString(ulong bytes)
@@ -230,6 +236,20 @@ namespace PortgateLib
 					}
 				}
 			}
+		}
+
+		public static Vector2 RandomPointInAnnulus(Vector2 origin, float minRadius, float maxRadius)
+		{
+			var randomDirection = (Random.insideUnitCircle * origin).normalized;
+			var randomDistance = Random.Range(minRadius, maxRadius);
+			var point = origin + randomDirection * randomDistance;
+			return point;
+		}
+
+		public static bool IsObjectTypeOrSubclassOf(this object obj, Type type)
+		{
+			var objType = obj.GetType();
+			return objType == type || objType.IsSubclassOf(type);
 		}
 	}
 }
