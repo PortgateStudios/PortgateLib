@@ -18,7 +18,7 @@ namespace PortgateLib
 		{
 			return new Vector2(vector.x, vector.y);
 		}
-		
+
 		// Vector2 Converters
 
 		public static Vector3 ToVector3XZ(this Vector2 vector)
@@ -99,7 +99,7 @@ namespace PortgateLib
 		#endregion
 		#region Direction & Distance
 
-		public static Vector3 GetDirectionTo(this Vector2 a, Vector2 b)
+		public static Vector2 GetDirectionTo(this Vector2 a, Vector2 b)
 		{
 			return (b - a).normalized;
 		}
