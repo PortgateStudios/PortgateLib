@@ -91,16 +91,19 @@ namespace PortgateLib.UI
 
 		public void StartFading(FadeType fadeType, Action onFadeFinishedCallback = null)
 		{
-			StartFading(fadeType == FadeType.In ? 1 : 0, onFadeFinishedCallback);
+			var targetAlpha = fadeType == FadeType.In ? 1 : 0;
+			StartFading(targetAlpha, onFadeFinishedCallback);
 		}
 
 		public void StartFading(float targetAlpha, Action onFadeFinishedCallback = null)
 		{
 			this.onFadeFinishedCallback = onFadeFinishedCallback;
 			this.targetAlpha = targetAlpha;
+
 			var interactable = targetAlpha > 0.95f ? true : false;
 			canvasGroup.interactable = interactable;
 			canvasGroup.blocksRaycasts = interactable;
+
 			var timerDuration = CalculateNeededTime();
 			fadeTimer = new Timer(timerDuration, OnFadeFinished);
 			fadeTimer.ResetStart();
