@@ -1,0 +1,18 @@
+{
+    "name": "PortgateStudios.PortgateLib.Logger For Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:4cececdc5d593744ea3c6f796024e29e"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
