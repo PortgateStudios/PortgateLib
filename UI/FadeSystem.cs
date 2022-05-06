@@ -21,33 +21,46 @@ namespace PortgateLib.UI
 		[SerializeField]
 		private Vector2 canvasReferenceResolution = new Vector2(1920, 1080);
 
-		private FadeableGroup fade;
+		private FadeableGroup _fade;
+		private FadeableGroup Fade
+		{
+			get
+			{
+				if (_fade == null)
+				{
+					_fade = CreateFade();
+				}
+				return _fade;
+			}
+		}
+
 		private Action onFadeFinishedCallback;
 
-		public void StartFading(FadeType fadeType, Action onFadeFinishedCallback = null, float duration = -1, bool reset = false)
+		public void ResetAndStartFading(FadeType fadeType, Action onFadeFinishedCallback = null, float duration = -1)
 		{
-			if (fade == null)
-			{
-				fade = CreateFade();
-			}
+			var shouldFadeBeVisibleAtStart = fadeType == FadeType.In ? true : false;
+			Fade.SetVisible(shouldFadeBeVisibleAtStart);
+			StartFading(fadeType, onFadeFinishedCallback, duration);
+		}
 
+		public void StartFading(FadeType fadeType, Action onFadeFinishedCallback = null, float duration = -1)
+		{
 			this.onFadeFinishedCallback = onFadeFinishedCallback;
 
 			if (duration < 0)
 			{
 				duration = defaultFadeDuration;
 			}
-			fade.OverrideDuration(duration);
-
-			if (reset)
-			{
-				var shouldFadeBeVisibleAtStart = fadeType == FadeType.In ? true : false;
-				fade.SetVisible(shouldFadeBeVisibleAtStart);
-			}
+			Fade.OverrideDuration(duration);
 
 			// Because if we want the _Screen_ to fade _in_, then we want the _Fade Image_ to fade _out_.
 			var invertedFadeType = fadeType == FadeType.In ? FadeType.Out : FadeType.In;
-			fade.StartFading(invertedFadeType, OnFadeFinished);
+			Fade.StartFading(invertedFadeType, OnFadeFinished);
+		}
+
+		private void OnFadeFinished()
+		{
+			onFadeFinishedCallback?.Invoke();
 		}
 
 		private FadeableGroup CreateFade()
@@ -79,11 +92,6 @@ namespace PortgateLib.UI
 			var canvasScaler = gameObject.AddComponent<CanvasScaler>();
 			canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
 			canvasScaler.referenceResolution = canvasReferenceResolution;
-		}
-
-		private void OnFadeFinished()
-		{
-			onFadeFinishedCallback?.Invoke();
 		}
 	}
 }
