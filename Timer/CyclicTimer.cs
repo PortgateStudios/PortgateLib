@@ -22,13 +22,7 @@ namespace PortgateLib.Timer
 
 		public override float RemainingPercent
 		{
-			get
-			{
-				if (Mathf.Approximately(Duration, 0))
-					return 0;
-				else
-					return RemainingTime / Duration;
-			}
+			get { return GetRemainingPercent(); }
 		}
 
 		public override float ElapsedTime
@@ -92,10 +86,15 @@ namespace PortgateLib.Timer
 
 		private void OnFinished()
 		{
-			if (onFinishedCallback != null)
-			{
-				onFinishedCallback();
-			}
+			onFinishedCallback?.Invoke();
+		}
+
+		private float GetRemainingPercent()
+		{
+			if (Mathf.Approximately(Duration, 0))
+				return 0;
+			else
+				return RemainingTime / Duration;
 		}
 	}
 }

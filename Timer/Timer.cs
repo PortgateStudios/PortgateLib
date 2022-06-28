@@ -32,7 +32,7 @@ namespace PortgateLib.Timer
 
 		public virtual float ElapsedPercent
 		{
-			get { return 1f - GetRemainingPercent(); }
+			get { return 1f - RemainingPercent; }
 		}
 
 		private readonly float duration;
