@@ -84,10 +84,7 @@ namespace PortgateLib.Timer
 
 		private void OnFinished()
 		{
-			if (onFinishedCallback != null)
-			{
-				onFinishedCallback();
-			}
+			onFinishedCallback?.Invoke();
 		}
 
 		protected void SetOnFinishedCallback(Action onFinishedCallback)
