@@ -12,7 +12,7 @@ namespace PortgateLib.Timer
 
 		public override bool IsRunning
 		{
-			get { return !stopped; }
+			get { return isRunning; }
 		}
 
 		public override float RemainingTime
@@ -46,7 +46,7 @@ namespace PortgateLib.Timer
 		}
 
 		private float elapsedTime = 0;
-		private bool stopped = true;
+		private bool isRunning;
 		private Action onTickCallback;
 
 		public InfiniteTimer(float cycleTime, Action onTickCallback) : base(cycleTime, null)
@@ -63,12 +63,12 @@ namespace PortgateLib.Timer
 		{
 			base.ResetStart();
 			elapsedTime = 0;
-			stopped = false;
+			isRunning = true;
 		}
 
 		public override void Stop()
 		{
-			stopped = true;
+			isRunning = false;
 		}
 
 		public override void Finish()
@@ -78,9 +78,11 @@ namespace PortgateLib.Timer
 
 		public override void Update()
 		{
-			if (!IsRunning) return;
-			base.Update();
-			elapsedTime += Time.deltaTime;
+			if (IsRunning)
+			{
+				base.Update();
+				elapsedTime += Time.deltaTime;
+			}
 		}
 
 		private void OnCycleEnded()
