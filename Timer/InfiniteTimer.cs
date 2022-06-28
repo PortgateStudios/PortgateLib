@@ -62,13 +62,20 @@ namespace PortgateLib.Timer
 		public override void ResetStart()
 		{
 			base.ResetStart();
-			elapsedTime = 0;
+			Reset();
 			isRunning = true;
 		}
 
 		public override void Stop()
 		{
+			Reset();
 			isRunning = false;
+		}
+
+		// not public, otherwise I would have to implement it at all the different Timers.
+		private void Reset()
+		{
+			elapsedTime = 0;
 		}
 
 		public override void Finish()
