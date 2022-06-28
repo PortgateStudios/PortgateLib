@@ -1,10 +1,10 @@
 {
 	"name": "com.portgatestudios.portgatelib",
-	"version": "1.5.1",
+	"version": "1.5.2",
 	"displayName": "PortgateLib",
 	"description": "Some of my common modules bundled into a package for easier reuse.",
-	"unity": "2021.3",
-	"unityRelease": "1f1",
+	"unity": "2022.1",
+	"unityRelease": "0f1",
 	"keywords": [
 		"utility",
 		"common",
