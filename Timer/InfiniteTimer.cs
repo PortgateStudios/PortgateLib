@@ -78,6 +78,8 @@ namespace PortgateLib.Timer
 			elapsedTime = 0;
 		}
 
+		// todo: Pause(), Start()
+
 		public override void Finish()
 		{
 			Stop();

@@ -12,7 +12,7 @@ namespace PortgateLib.Timer
 
 		public virtual bool IsRunning
 		{
-			get { return remainingTime >= 0; }
+			get { return isRunning; }
 		}
 
 		public virtual float RemainingTime
@@ -36,8 +36,9 @@ namespace PortgateLib.Timer
 		}
 
 		private readonly float duration;
-		private float remainingTime = -1;
+		private float remainingTime;
 		private Action onFinishedCallback;
+		private bool isRunning;
 
 		public Timer(float duration, Action onFinishedCallback = null)
 		{
@@ -46,28 +47,38 @@ namespace PortgateLib.Timer
 				throw new Exception("Duration is negative!");
 			}
 			this.duration = duration;
+			this.remainingTime = duration;
 			this.onFinishedCallback = onFinishedCallback;
 		}
 
 		public virtual void ResetStart()
 		{
+			Reset();
+			isRunning = true;
+		}
+	
+		public virtual void Stop()
+		{
+			Reset();
+			isRunning = false;
+		}
+
+		// not public, otherwise I would have to implement it at all the different Timers.
+		private void Reset()
+		{
 			remainingTime = duration;
 		}
 
-		public virtual void Stop()
-		{
-			remainingTime = -1;
-		}
+		// todo: Pause(), Start()
 
 		public virtual void Finish()
 		{
-			Stop();
 			OnFinished();
 		}
 
 		public virtual void Update()
 		{
-			if (remainingTime > 0)
+			if (isRunning)
 			{
 				remainingTime -= Time.deltaTime;
 				if (remainingTime < 0)
@@ -75,15 +86,12 @@ namespace PortgateLib.Timer
 					OnFinished();
 				}
 			}
-			else if (Mathf.Approximately(remainingTime, 0))
-			{
-				remainingTime = -1;
-				OnFinished();
-			}
 		}
 
 		private void OnFinished()
 		{
+			remainingTime = 0;
+			isRunning = false;
 			onFinishedCallback?.Invoke();
 		}
 

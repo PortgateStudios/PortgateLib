@@ -12,7 +12,7 @@ namespace PortgateLib.Timer
 
 		public override bool IsRunning
 		{
-			get { return remainingDuration >= 0; }
+			get { return isRunning; }
 		}
 
 		public override float RemainingTime
@@ -36,8 +36,9 @@ namespace PortgateLib.Timer
 		}
 
 		private readonly float duration;
-		private float remainingDuration = -1;
+		private float remainingDuration;
 		private Action onFinishedCallback;
+		private bool isRunning;
 
 		public CyclicTimer(float duration, float cycleTime, Action onTickCallback, Action onFinishedCallback = null) : base(cycleTime, onTickCallback)
 		{
@@ -46,29 +47,39 @@ namespace PortgateLib.Timer
 				throw new Exception("Duration is negative!");
 			}
 			this.duration = duration;
+			this.remainingDuration = duration;
 			this.onFinishedCallback = onFinishedCallback;
 		}
 
 		public override void ResetStart()
 		{
 			base.ResetStart();
-			this.remainingDuration = duration;
+			Reset();
+			isRunning = true;
 		}
 
 		public override void Stop()
 		{
-			this.remainingDuration = -1;
+			Reset();
+			isRunning = false;
 		}
+
+		// not public, otherwise I would have to implement it at all the different Timers.
+		private void Reset()
+		{
+			remainingDuration = duration;
+		}
+
+		// todo: Pause(), Start()
 
 		public override void Finish()
 		{
-			Stop();
 			OnFinished();
 		}
 
 		public override void Update()
 		{
-			if (remainingDuration > 0)
+			if (isRunning)
 			{
 				remainingDuration -= Time.deltaTime;
 				base.Update();
@@ -77,15 +88,12 @@ namespace PortgateLib.Timer
 					OnFinished();
 				}
 			}
-			else if (Mathf.Approximately(remainingDuration, 0))
-			{
-				remainingDuration = -1;
-				OnFinished();
-			}
 		}
 
 		private void OnFinished()
 		{
+			remainingDuration = 0;
+			isRunning = false;
 			onFinishedCallback?.Invoke();
 		}
 
