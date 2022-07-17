@@ -22,7 +22,7 @@ namespace PortgateLib.UI
 		private Vector2 canvasReferenceResolution = new Vector2(1920, 1080);
 
 		private FadeableGroup _fade;
-		private FadeableGroup Fade
+		public FadeableGroup Fade
 		{
 			get
 			{
