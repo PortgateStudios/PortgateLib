@@ -96,7 +96,7 @@ namespace PortgateLib.UI
 			this.targetAlpha = targetAlpha;
 			this.onFadeFinishedCallback = onFadeFinishedCallback;
 
-			var interactable = targetAlpha > 0.95f ? true : false;
+			var interactable = targetAlpha > 0.95f;
 			canvasGroup.interactable = interactable;
 			canvasGroup.blocksRaycasts = interactable;
 
