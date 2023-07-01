@@ -28,6 +28,24 @@ namespace PortgateLib
 			return array[index];
 		}
 
+		public static T[] GetRandomElements<T>(this T[] array, int count, bool distinct)
+		{
+			if (distinct)
+			{
+				var shuffledArray = array.Shuffle();
+				return shuffledArray.Take(count).ToArray();
+			}
+			else
+			{
+				var result = new T[count];
+				for (var i = 0; i < count; i++)
+				{
+					result[i] = array.GetRandomElement();
+				}
+				return result;
+			}
+		}
+
 		public static T[] Shift<T>(this T[] array, int direction, int start = 0)
 		{
 			var length = array.Length;
