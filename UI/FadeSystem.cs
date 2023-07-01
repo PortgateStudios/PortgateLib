@@ -38,7 +38,7 @@ namespace PortgateLib.UI
 
 		public void ResetAndStartFading(FadeType fadeType, Action onFadeFinishedCallback = null, float duration = -1)
 		{
-			var shouldFadeBeVisibleAtStart = fadeType == FadeType.In ? true : false;
+			var shouldFadeBeVisibleAtStart = fadeType == FadeType.In;
 			Fade.SetVisible(shouldFadeBeVisibleAtStart);
 			StartFading(fadeType, onFadeFinishedCallback, duration);
 		}
@@ -51,11 +51,10 @@ namespace PortgateLib.UI
 			{
 				duration = defaultFadeDuration;
 			}
-			Fade.OverrideDuration(duration);
 
 			// Because if we want the _Screen_ to fade _in_, then we want the _Fade Image_ to fade _out_.
 			var invertedFadeType = fadeType == FadeType.In ? FadeType.Out : FadeType.In;
-			Fade.StartFading(invertedFadeType, OnFadeFinished);
+			Fade.StartFading(invertedFadeType, duration, OnFadeFinished);
 		}
 
 		private void OnFadeFinished()
