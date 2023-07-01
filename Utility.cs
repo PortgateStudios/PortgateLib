@@ -46,19 +46,17 @@ namespace PortgateLib
 		public static string ComputeMD5Hash(this string input)
 		{
 			// Use input string to calculate MD5 hash
-			using (var md5 = MD5.Create())
-			{
-				var inputBytes = Encoding.ASCII.GetBytes(input);
-				var hashBytes = md5.ComputeHash(inputBytes);
+			using var md5 = MD5.Create();
+			var inputBytes = Encoding.ASCII.GetBytes(input);
+			var hashBytes = md5.ComputeHash(inputBytes);
 
-				// Convert the byte array to hexadecimal string
-				var sb = new StringBuilder();
-				for (int i = 0; i < hashBytes.Length; i++)
-				{
-					sb.Append(hashBytes[i].ToString("X2"));
-				}
-				return sb.ToString();
+			// Convert the byte array to hexadecimal string
+			var sb = new StringBuilder();
+			for (int i = 0; i < hashBytes.Length; i++)
+			{
+				sb.Append(hashBytes[i].ToString("X2"));
 			}
+			return sb.ToString();
 		}
 
 		public static int ModifyInCyclicRange(this int value, int amount, int min, int max)
@@ -80,7 +78,7 @@ namespace PortgateLib
 			}
 			else if (newValue >= maxLimit)
 			{
-				newValue = newValue % maxLimit;
+				newValue %= maxLimit;
 			}
 
 			newValue -= translation;
@@ -172,12 +170,34 @@ namespace PortgateLib
 			}
 		}
 
+		public static Vector2 GetSize(this RectTransform rectTransform)
+		{
+			var size = rectTransform.sizeDelta;
+			var anchorX = (min: rectTransform.anchorMin.x, max: rectTransform.anchorMax.x);
+			var anchorY = (min: rectTransform.anchorMin.y, max: rectTransform.anchorMax.y);
+			if (Mathf.Approximately(anchorX.min, 0) && Mathf.Approximately(anchorX.max, 1))
+			{
+				size.x = GetParentSize(rectTransform).x + size.x;
+			}
+			if (Mathf.Approximately(anchorY.min, 0) && Mathf.Approximately(anchorY.max, 1))
+			{
+				size.y = GetParentSize(rectTransform).y + size.y;
+			}
+			return size;
+		}
+
+		private static Vector2 GetParentSize(this RectTransform rectTransform)
+		{
+			var parent = rectTransform.parent.GetComponent<RectTransform>();
+			return parent.GetSize();
+		}
+
 		// Index starts at 0.
 		public static bool IsDigitZero(this float value, int indexOfDigit)
 		{
 			var multiplier = Mathf.Pow(10, indexOfDigit + 1);
 			var integer = (int)(value * multiplier);
-			return integer % multiplier == 0 ? true : false;
+			return integer % multiplier == 0;
 		}
 
 		public static string GetPath(this GameObject gameObject)
@@ -214,28 +234,48 @@ namespace PortgateLib
 			var gb = bytes / 1024f / 1024f / 1024f;
 			if (gb > 1)
 			{
-				return $"{gb.ToString("0.00")} GB";
+				return $"{gb:0.00} GB";
 			}
 			else
 			{
 				var mb = bytes / 1024f / 1024f;
 				if (mb > 1)
 				{
-					return $"{mb.ToString("0.00")} MB";
+					return $"{mb:0.00} MB";
 				}
 				else
 				{
 					var kb = bytes / 1024f;
 					if (kb > 1)
 					{
-						return $"{kb.ToString("0.00")} KB";
+						return $"{kb:0.00} KB";
 					}
 					else
 					{
-						return $"{bytes.ToString("0.00")} B";
+						return $"{bytes:0.00} B";
 					}
 				}
 			}
+		}
+
+		public static string IntToRomanNumerals(int number)
+		{
+			if ((number < 0) || (number > 3999)) throw new ArgumentOutOfRangeException("insert value betwheen 1 and 3999");
+			if (number < 1) return string.Empty;
+			if (number >= 1000) return "M" + IntToRomanNumerals(number - 1000);
+			if (number >= 900) return "CM" + IntToRomanNumerals(number - 900);
+			if (number >= 500) return "D" + IntToRomanNumerals(number - 500);
+			if (number >= 400) return "CD" + IntToRomanNumerals(number - 400);
+			if (number >= 100) return "C" + IntToRomanNumerals(number - 100);
+			if (number >= 90) return "XC" + IntToRomanNumerals(number - 90);
+			if (number >= 50) return "L" + IntToRomanNumerals(number - 50);
+			if (number >= 40) return "XL" + IntToRomanNumerals(number - 40);
+			if (number >= 10) return "X" + IntToRomanNumerals(number - 10);
+			if (number >= 9) return "IX" + IntToRomanNumerals(number - 9);
+			if (number >= 5) return "V" + IntToRomanNumerals(number - 5);
+			if (number >= 4) return "IV" + IntToRomanNumerals(number - 4);
+			if (number >= 1) return "I" + IntToRomanNumerals(number - 1);
+			throw new ArgumentOutOfRangeException("something bad happened");
 		}
 
 		public static Vector2 RandomPointInAnnulus(Vector2 origin, float minRadius, float maxRadius)
