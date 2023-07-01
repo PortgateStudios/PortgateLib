@@ -147,6 +147,19 @@ namespace PortgateLib.UI
 
 		// Generic Fading
 
+		public void StartInteractibilityFading(FadeType fadeType, float duration, Action onFadeFinishedCallback = null)
+		{
+			StartInteractibilityFading(fadeType, duration, Ease.Unset, onFadeFinishedCallback);
+		}
+
+		public void StartInteractibilityFading(FadeType fadeType, float duration, Ease ease, Action onFadeFinishedCallback = null)
+		{
+			var interactable = fadeType == FadeType.In;
+			SetInteractable(interactable);
+			var targetAlpha = fadeType == FadeType.In ? 1 : 0;
+			StartFading(targetAlpha, duration, ease, onFadeFinishedCallback);
+		}
+
 		public void StartFading(FadeType fadeType, float duration, Action onFadeFinishedCallback = null)
 		{
 			var targetAlpha = fadeType == FadeType.In ? 1 : 0;

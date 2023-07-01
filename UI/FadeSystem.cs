@@ -11,15 +11,12 @@ namespace PortgateLib.UI
 			get { return GetInstance(typeof(FadeSystem)) as FadeSystem; }
 		}
 
-		private static readonly string CANVAS_NAME = "FadeCanvas";
-		private static readonly int CANVAS_SORTING_ORDER = 999;
+		private const string CANVAS_NAME = "FadeCanvas";
+		private const int CANVAS_SORTING_ORDER = 999;
 
-		[SerializeField]
-		private FadeableGroup fadePrefab;
-		[SerializeField]
-		private float defaultFadeDuration = 0.33f;
-		[SerializeField]
-		private Vector2 canvasReferenceResolution = new Vector2(1920, 1080);
+		[SerializeField] private FadeableGroup fadePrefab;
+		[SerializeField] private float defaultFadeDuration = 0.33f;
+		[SerializeField] private Vector2 canvasReferenceResolution = new(1920, 1080);
 
 		private FadeableGroup _fade;
 		public FadeableGroup Fade
@@ -39,7 +36,7 @@ namespace PortgateLib.UI
 		public void ResetAndStartFading(FadeType fadeType, Action onFadeFinishedCallback = null, float duration = -1)
 		{
 			var shouldFadeBeVisibleAtStart = fadeType == FadeType.In;
-			Fade.SetVisible(shouldFadeBeVisibleAtStart);
+			Fade.SetVisibleInteractable(shouldFadeBeVisibleAtStart);
 			StartFading(fadeType, onFadeFinishedCallback, duration);
 		}
 
@@ -54,7 +51,7 @@ namespace PortgateLib.UI
 
 			// Because if we want the _Screen_ to fade _in_, then we want the _Fade Image_ to fade _out_.
 			var invertedFadeType = fadeType == FadeType.In ? FadeType.Out : FadeType.In;
-			Fade.StartFading(invertedFadeType, duration, OnFadeFinished);
+			Fade.StartInteractibilityFading(invertedFadeType, duration, OnFadeFinished);
 		}
 
 		private void OnFadeFinished()
