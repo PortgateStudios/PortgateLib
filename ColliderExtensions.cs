@@ -121,5 +121,43 @@ namespace PortgateLib
 			// this is how Unity handles capsule colliders' scaling.
 			return Mathf.Max(scale.x, scale.z);
 		}
+
+		public static Collider2D[] OverlapCollider(this Collider2D collider, Transform transform)
+		{
+			var type = collider.GetType();
+			if (type == typeof(BoxCollider2D))
+			{
+				var boxCollider = collider as BoxCollider2D;
+				var center = transform.TransformPoint(boxCollider.offset);
+				var sizes = boxCollider.size;
+				var scale = transform.localScale;
+				sizes.Scale(scale);
+				return Physics2D.OverlapBoxAll(center, sizes / 2f, transform.rotation.eulerAngles.z);
+			}
+			else if (type == typeof(CircleCollider2D))
+			{
+				var circleCollider = collider as CircleCollider2D;
+				(var center, var radius) = circleCollider.GetCircleData(transform);
+				return Physics2D.OverlapCircleAll(center, radius);
+			}
+			else
+			{
+				throw new Exception("Collider type is not handled!");
+			}
+		}
+
+		private static (Vector2 center, float radius) GetCircleData(this CircleCollider2D collider, Transform transform)
+		{
+			var center = transform.TransformPoint(collider.offset);
+			var scale = GetCircleScale(transform.localScale);
+			var radius = collider.radius * scale;
+			return (center, radius);
+		}
+
+		private static float GetCircleScale(Vector2 scale)
+		{
+			// this is how Unity handles circle colliders' scaling.
+			return Mathf.Max(scale.x, scale.y);
+		}
 	}
 }
