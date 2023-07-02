@@ -175,7 +175,8 @@ namespace PortgateLib.UI
 		public void StartFading(float targetAlpha, float duration, Ease ease = Ease.Unset, Action onFadeFinishedCallback = null)
 		{
 			var fadingIn = Alpha < targetAlpha;
-			if (fadingIn)
+			var noFadeNeeded = Mathf.Approximately(Alpha, targetAlpha);
+			if (fadingIn || noFadeNeeded)
 			{
 				if (InPunchStrength.HasValue)
 				{
