@@ -14,7 +14,7 @@ namespace PortgateLib
 		public static void Punch(this RectTransform rectTransform, float strength, float duration, int vibration, Action onComplete = null)
 		{
 			var punch = Vector3.one * strength;
-			rectTransform.DORewind();
+			rectTransform.DOComplete();
 			rectTransform.DOPunchScale(punch, duration, vibration).OnComplete(() => onComplete?.Invoke());
 		}
 	}
