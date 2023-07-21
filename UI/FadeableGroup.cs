@@ -23,6 +23,9 @@ namespace PortgateLib.UI
 	[RequireComponent(typeof(CanvasGroup))]
 	public class FadeableGroup : MonoBehaviour
 	{
+		public const Ease DefaultEase = Ease.Unset;
+		public const InProgressFade DefaultInProgressFade = InProgressFade.Complete;
+
 		public Ease FadeInEase
 		{
 			get;
@@ -100,11 +103,21 @@ namespace PortgateLib.UI
 			canvasGroup.blocksRaycasts = interactable;
 		}
 
-		// Fading in
+		// Interactibility Fading In
 
 		public void StartInteractableFadingIn(float duration, Action onFadeInFinishedCallback = null)
 		{
-			StartInteractableFadingIn(duration, InProgressFade.Complete, Ease.Unset, onFadeInFinishedCallback);
+			StartInteractableFadingIn(duration, DefaultInProgressFade, DefaultEase, onFadeInFinishedCallback);
+		}
+
+		public void StartInteractableFadingIn(float duration, InProgressFade inProgressFade, Action onFadeInFinishedCallback = null)
+		{
+			StartInteractableFadingIn(duration, inProgressFade, DefaultEase, onFadeInFinishedCallback);
+		}
+
+		public void StartInteractableFadingIn(float duration, Ease ease, Action onFadeInFinishedCallback = null)
+		{
+			StartInteractableFadingIn(duration, DefaultInProgressFade, ease, onFadeInFinishedCallback);
 		}
 
 		public void StartInteractableFadingIn(float duration, InProgressFade inProgressFade, Ease ease, Action onFadeInFinishedCallback = null)
@@ -113,9 +126,21 @@ namespace PortgateLib.UI
 			StartFadingIn(duration, inProgressFade, ease, onFadeInFinishedCallback);
 		}
 
+		// Fading In
+
 		public void StartFadingIn(float duration, Action onFadeInFinishedCallback = null)
 		{
-			StartFading(FadeType.In, duration, InProgressFade.Complete, Ease.Unset, onFadeInFinishedCallback);
+			StartFading(FadeType.In, duration, DefaultInProgressFade, DefaultEase, onFadeInFinishedCallback);
+		}
+
+		public void StartFadingIn(float duration, InProgressFade inProgressFade, Action onFadeInFinishedCallback = null)
+		{
+			StartFadingIn(duration, inProgressFade, DefaultEase, onFadeInFinishedCallback);
+		}
+
+		public void StartFadingIn(float duration, Ease ease, Action onFadeInFinishedCallback = null)
+		{
+			StartFadingIn(duration, DefaultInProgressFade, ease, onFadeInFinishedCallback);
 		}
 
 		public void StartFadingIn(float duration, InProgressFade inProgressFade, Ease ease, Action onFadeInFinishedCallback = null)
@@ -127,11 +152,21 @@ namespace PortgateLib.UI
 			StartFading(FadeType.In, duration, inProgressFade, ease, onFadeInFinishedCallback);
 		}
 
-		// Fading Out
+		// Interactibility Fading Out
 
 		public void StartUninteractableFadingOut(float duration, Action onFadeOutFinishedCallback = null)
 		{
-			StartUninteractableFadingOut(duration, InProgressFade.Complete, Ease.Unset, onFadeOutFinishedCallback);
+			StartUninteractableFadingOut(duration, DefaultInProgressFade, DefaultEase, onFadeOutFinishedCallback);
+		}
+
+		public void StartUninteractableFadingOut(float duration, InProgressFade inProgressFade, Action onFadeInFinishedCallback = null)
+		{
+			StartUninteractableFadingOut(duration, inProgressFade, DefaultEase, onFadeInFinishedCallback);
+		}
+
+		public void StartUninteractableFadingOut(float duration, Ease ease, Action onFadeInFinishedCallback = null)
+		{
+			StartUninteractableFadingOut(duration, DefaultInProgressFade, ease, onFadeInFinishedCallback);
 		}
 
 		public void StartUninteractableFadingOut(float duration, InProgressFade inProgressFade, Ease ease, Action onFadeOutFinishedCallback = null)
@@ -140,9 +175,21 @@ namespace PortgateLib.UI
 			StartFadingOut(duration, inProgressFade, ease, onFadeOutFinishedCallback);
 		}
 
+		// Fading Out
+
 		public void StartFadingOut(float duration, Action onFadeOutFinishedCallback = null)
 		{
-			StartFading(FadeType.Out, duration, InProgressFade.Complete, Ease.Unset, onFadeOutFinishedCallback);
+			StartFading(FadeType.Out, duration, DefaultInProgressFade, DefaultEase, onFadeOutFinishedCallback);
+		}
+
+		public void StartFadingOut(float duration, InProgressFade inProgressFade, Action onFadeInFinishedCallback = null)
+		{
+			StartFadingOut(duration, inProgressFade, DefaultEase, onFadeInFinishedCallback);
+		}
+
+		public void StartFadingOut(float duration, Ease ease, Action onFadeInFinishedCallback = null)
+		{
+			StartFadingOut(duration, DefaultInProgressFade, ease, onFadeInFinishedCallback);
 		}
 
 		public void StartFadingOut(float duration, InProgressFade inProgressFade, Ease ease, Action onFadeOutFinishedCallback = null)
@@ -154,11 +201,21 @@ namespace PortgateLib.UI
 			StartFading(FadeType.Out, duration, inProgressFade, ease, onFadeOutFinishedCallback);
 		}
 
-		// Generic Fading
+		// Generic Interactibility Fading
 
 		public void StartInteractibilityFading(FadeType fadeType, float duration, Action onFadeFinishedCallback = null)
 		{
-			StartInteractibilityFading(fadeType, duration, InProgressFade.Complete, Ease.Unset, onFadeFinishedCallback);
+			StartInteractibilityFading(fadeType, duration, DefaultInProgressFade, DefaultEase, onFadeFinishedCallback);
+		}
+
+		public void StartInteractibilityFading(FadeType fadeType, float duration, InProgressFade inProgressFade, Action onFadeInFinishedCallback = null)
+		{
+			StartInteractibilityFading(fadeType, duration, inProgressFade, DefaultEase, onFadeInFinishedCallback);
+		}
+
+		public void StartInteractibilityFading(FadeType fadeType, float duration, Ease ease, Action onFadeInFinishedCallback = null)
+		{
+			StartInteractibilityFading(fadeType, duration, DefaultInProgressFade, ease, onFadeInFinishedCallback);
 		}
 
 		public void StartInteractibilityFading(FadeType fadeType, float duration, InProgressFade inProgressFade, Ease ease, Action onFadeFinishedCallback = null)
@@ -169,10 +226,22 @@ namespace PortgateLib.UI
 			StartFading(targetAlpha, duration, inProgressFade, ease, onFadeFinishedCallback);
 		}
 
+		// Generic  Fading
+
 		public void StartFading(FadeType fadeType, float duration, Action onFadeFinishedCallback = null)
 		{
 			var targetAlpha = fadeType == FadeType.In ? 1 : 0;
-			StartFading(targetAlpha, duration, InProgressFade.Complete, Ease.Unset, onFadeFinishedCallback);
+			StartFading(targetAlpha, duration, DefaultInProgressFade, DefaultEase, onFadeFinishedCallback);
+		}
+
+		public void StartFading(FadeType fadeType, float duration, InProgressFade inProgressFade, Action onFadeInFinishedCallback = null)
+		{
+			StartFading(fadeType, duration, inProgressFade, DefaultEase, onFadeInFinishedCallback);
+		}
+
+		public void StartFading(FadeType fadeType, float duration, Ease ease, Action onFadeInFinishedCallback = null)
+		{
+			StartFading(fadeType, duration, DefaultInProgressFade, ease, onFadeInFinishedCallback);
 		}
 
 		public void StartFading(FadeType fadeType, float duration, InProgressFade inProgressFade, Ease ease, Action onFadeFinishedCallback = null)
