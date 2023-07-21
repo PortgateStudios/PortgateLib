@@ -191,13 +191,13 @@ namespace PortgateLib.UI
 				}
 			}
 
-			this.onFadeFinishedCallback = onFadeFinishedCallback;
 			canvasGroup.DOComplete();
 			tween = canvasGroup.DOFade(targetAlpha, duration);
 			if (ease != Ease.Unset)
 			{
 				tween.SetEase(ease);
 			}
+			this.onFadeFinishedCallback = onFadeFinishedCallback;
 			tween.OnComplete(OnFadeFinished);
 		}
 
