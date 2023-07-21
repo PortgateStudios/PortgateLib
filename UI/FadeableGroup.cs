@@ -11,6 +11,15 @@ namespace PortgateLib.UI
 		Out
 	}
 
+	// The default is Complete, but make sure to check below.
+	public enum InProgressFade
+	{
+		Kill,  // Kills the ongoing tween(s). The state will stay as it is right now.
+		Rewind, // Rewinds the ongoing tween(s). The state will be as it was before the tween(s) started.
+		Complete, // Instantly completes the ongoing tween(s). The state will be as if the tween(s) were completed.
+		Keep // Keeps the ongoing tween(s), resulting in multiple parallel tweens.
+	}
+
 	[RequireComponent(typeof(CanvasGroup))]
 	public class FadeableGroup : MonoBehaviour
 	{
@@ -95,84 +104,84 @@ namespace PortgateLib.UI
 
 		public void StartInteractableFadingIn(float duration, Action onFadeInFinishedCallback = null)
 		{
-			StartInteractableFadingIn(duration, Ease.Unset, onFadeInFinishedCallback);
+			StartInteractableFadingIn(duration, InProgressFade.Complete, Ease.Unset, onFadeInFinishedCallback);
 		}
 
-		public void StartInteractableFadingIn(float duration, Ease ease, Action onFadeInFinishedCallback = null)
+		public void StartInteractableFadingIn(float duration, InProgressFade inProgressFade, Ease ease, Action onFadeInFinishedCallback = null)
 		{
 			SetInteractable(true);
-			StartFadingIn(duration, ease, onFadeInFinishedCallback);
+			StartFadingIn(duration, inProgressFade, ease, onFadeInFinishedCallback);
 		}
 
 		public void StartFadingIn(float duration, Action onFadeInFinishedCallback = null)
 		{
-			StartFading(FadeType.In, duration, Ease.Unset, onFadeInFinishedCallback);
+			StartFading(FadeType.In, duration, InProgressFade.Complete, Ease.Unset, onFadeInFinishedCallback);
 		}
 
-		public void StartFadingIn(float duration, Ease ease, Action onFadeInFinishedCallback = null)
+		public void StartFadingIn(float duration, InProgressFade inProgressFade, Ease ease, Action onFadeInFinishedCallback = null)
 		{
 			if (ease == Ease.Unset)
 			{
 				ease = FadeInEase;
 			}
-			StartFading(FadeType.In, duration, ease, onFadeInFinishedCallback);
+			StartFading(FadeType.In, duration, inProgressFade, ease, onFadeInFinishedCallback);
 		}
 
 		// Fading Out
 
 		public void StartUninteractableFadingOut(float duration, Action onFadeOutFinishedCallback = null)
 		{
-			StartUninteractableFadingOut(duration, Ease.Unset, onFadeOutFinishedCallback);
+			StartUninteractableFadingOut(duration, InProgressFade.Complete, Ease.Unset, onFadeOutFinishedCallback);
 		}
 
-		public void StartUninteractableFadingOut(float duration, Ease ease, Action onFadeOutFinishedCallback = null)
+		public void StartUninteractableFadingOut(float duration, InProgressFade inProgressFade, Ease ease, Action onFadeOutFinishedCallback = null)
 		{
 			SetInteractable(false);
-			StartFadingOut(duration, ease, onFadeOutFinishedCallback);
+			StartFadingOut(duration, inProgressFade, ease, onFadeOutFinishedCallback);
 		}
 
 		public void StartFadingOut(float duration, Action onFadeOutFinishedCallback = null)
 		{
-			StartFading(FadeType.Out, duration, Ease.Unset, onFadeOutFinishedCallback);
+			StartFading(FadeType.Out, duration, InProgressFade.Complete, Ease.Unset, onFadeOutFinishedCallback);
 		}
 
-		public void StartFadingOut(float duration, Ease ease, Action onFadeOutFinishedCallback = null)
+		public void StartFadingOut(float duration, InProgressFade inProgressFade, Ease ease, Action onFadeOutFinishedCallback = null)
 		{
 			if (ease == Ease.Unset)
 			{
 				ease = FadeOutEase;
 			}
-			StartFading(FadeType.Out, duration, ease, onFadeOutFinishedCallback);
+			StartFading(FadeType.Out, duration, inProgressFade, ease, onFadeOutFinishedCallback);
 		}
 
 		// Generic Fading
 
 		public void StartInteractibilityFading(FadeType fadeType, float duration, Action onFadeFinishedCallback = null)
 		{
-			StartInteractibilityFading(fadeType, duration, Ease.Unset, onFadeFinishedCallback);
+			StartInteractibilityFading(fadeType, duration, InProgressFade.Complete, Ease.Unset, onFadeFinishedCallback);
 		}
 
-		public void StartInteractibilityFading(FadeType fadeType, float duration, Ease ease, Action onFadeFinishedCallback = null)
+		public void StartInteractibilityFading(FadeType fadeType, float duration, InProgressFade inProgressFade, Ease ease, Action onFadeFinishedCallback = null)
 		{
 			var interactable = fadeType == FadeType.In;
 			SetInteractable(interactable);
 			var targetAlpha = fadeType == FadeType.In ? 1 : 0;
-			StartFading(targetAlpha, duration, ease, onFadeFinishedCallback);
+			StartFading(targetAlpha, duration, inProgressFade, ease, onFadeFinishedCallback);
 		}
 
 		public void StartFading(FadeType fadeType, float duration, Action onFadeFinishedCallback = null)
 		{
 			var targetAlpha = fadeType == FadeType.In ? 1 : 0;
-			StartFading(targetAlpha, duration, Ease.Unset, onFadeFinishedCallback);
+			StartFading(targetAlpha, duration, InProgressFade.Complete, Ease.Unset, onFadeFinishedCallback);
 		}
 
-		public void StartFading(FadeType fadeType, float duration, Ease ease, Action onFadeFinishedCallback = null)
+		public void StartFading(FadeType fadeType, float duration, InProgressFade inProgressFade, Ease ease, Action onFadeFinishedCallback = null)
 		{
 			var targetAlpha = fadeType == FadeType.In ? 1 : 0;
-			StartFading(targetAlpha, duration, ease, onFadeFinishedCallback);
+			StartFading(targetAlpha, duration, inProgressFade, ease, onFadeFinishedCallback);
 		}
 
-		public void StartFading(float targetAlpha, float duration, Ease ease = Ease.Unset, Action onFadeFinishedCallback = null)
+		public void StartFading(float targetAlpha, float duration, InProgressFade inProgressFade = InProgressFade.Complete, Ease ease = Ease.Unset, Action onFadeFinishedCallback = null)
 		{
 			var fadingIn = Alpha < targetAlpha;
 			var noFadeNeeded = Mathf.Approximately(Alpha, targetAlpha);
@@ -191,12 +200,25 @@ namespace PortgateLib.UI
 				}
 			}
 
-			canvasGroup.DOComplete();
+			if (inProgressFade == InProgressFade.Kill)
+			{
+				canvasGroup.DOKill();
+			}
+			else if (inProgressFade == InProgressFade.Rewind)
+			{
+				canvasGroup.DORewind();
+			}
+			else if (inProgressFade == InProgressFade.Complete)
+			{
+				canvasGroup.DOComplete();
+			}
+
 			tween = canvasGroup.DOFade(targetAlpha, duration);
 			if (ease != Ease.Unset)
 			{
 				tween.SetEase(ease);
 			}
+
 			this.onFadeFinishedCallback = onFadeFinishedCallback;
 			tween.OnComplete(OnFadeFinished);
 		}
