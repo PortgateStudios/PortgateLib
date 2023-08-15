@@ -7,6 +7,11 @@ namespace PortgateLib
 {
 	public static class CollectionExtensions
 	{
+		public static List<T> Shuffle<T>(this List<T> list)
+		{
+			return list.ToArray().Shuffle().ToList();
+		}
+
 		public static T[] Shuffle<T>(this T[] array)
 		{
 			int n = array.Length;
@@ -26,6 +31,11 @@ namespace PortgateLib
 		{
 			var index = Random.Range(0, array.Length);
 			return array[index];
+		}
+
+		public static List<T> GetRandomElements<T>(this List<T> list, int count, bool distinct)
+		{
+			return list.ToArray().GetRandomElements(count, distinct).ToList();
 		}
 
 		public static T[] GetRandomElements<T>(this T[] array, int count, bool distinct)
