@@ -27,6 +27,11 @@ namespace PortgateLib
 			return result;
 		}
 
+		public static T GetRandomElement<T>(this List<T> list)
+		{
+			return list.ToArray().GetRandomElement();
+		}
+
 		public static T GetRandomElement<T>(this T[] array)
 		{
 			var index = Random.Range(0, array.Length);
