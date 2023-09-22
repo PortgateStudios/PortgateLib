@@ -1,3 +1,4 @@
+using System.IO;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
@@ -21,19 +22,27 @@ namespace PortgateLib.Mailer
 		public string Password { get; init; }
 	}
 
+	public record AttachmentOptions
+	{
+		public string FileName { get; init; }
+		public string Content { get; init; }
+	}
+
 	public static class GenericMailer
 	{
-		public static void Send(MailerOptions mailerOptions, string recipient, string subject, string body)
+		private const string ATTACHMENT_FILE_NAME = "attachment.json";
+
+		public static void Send(MailerOptions mailerOptions, string recipient, string subject, string body, AttachmentOptions attachmentOptions = null)
 		{
 			using var client = CreateSmtpClient(mailerOptions);
-			var msg = CreateMailMessage(mailerOptions, recipient, subject, body);
+			var msg = CreateMailMessage(mailerOptions, recipient, subject, body, attachmentOptions);
 			client.Send(msg);
 		}
 
-		public static async Task SendAsync(MailerOptions mailerOptions, string recipient, string subject, string body)
+		public static async Task SendAsync(MailerOptions mailerOptions, string recipient, string subject, string body, AttachmentOptions attachmentOptions = null)
 		{
 			using var client = CreateSmtpClient(mailerOptions);
-			var msg = CreateMailMessage(mailerOptions, recipient, subject, body);
+			var msg = CreateMailMessage(mailerOptions, recipient, subject, body, attachmentOptions);
 			await client.SendMailAsync(msg);
 		}
 
@@ -47,7 +56,7 @@ namespace PortgateLib.Mailer
 			return client;
 		}
 
-		private static MailMessage CreateMailMessage(MailerOptions mailerOptions, string recipient, string subject, string body)
+		private static MailMessage CreateMailMessage(MailerOptions mailerOptions, string recipient, string subject, string body, AttachmentOptions attachmentOptions)
 		{
 			var msg = new MailMessage()
 			{
@@ -56,7 +65,17 @@ namespace PortgateLib.Mailer
 				Body = body,
 				IsBodyHtml = mailerOptions.IsBodyHtml
 			};
+
 			msg.To.Add(recipient);
+
+
+			if (attachmentOptions != null)
+			{
+				var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(attachmentOptions.Content));
+				var attachment = new Attachment(stream, attachmentOptions.FileName);
+				msg.Attachments.Add(attachment);
+			}
+
 			return msg;
 		}
 	}

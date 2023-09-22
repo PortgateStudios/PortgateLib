@@ -11,16 +11,16 @@ namespace PortgateLib.Mailer
 
 	public static class GMailer
 	{
-		public static void Send(GMailerOptions gMailerOptions, string recipient, string subject, string body)
+		public static void Send(GMailerOptions gMailerOptions, string recipient, string subject, string body, AttachmentOptions attachmentOptions = null)
 		{
 			var mailerOptions = GetMailerOptions(gMailerOptions);
-			GenericMailer.Send(mailerOptions, recipient, subject, body);
+			GenericMailer.Send(mailerOptions, recipient, subject, body, attachmentOptions);
 		}
 
-		public static async Task SendAsync(GMailerOptions gMailerOptions, string recipient, string subject, string body)
+		public static async Task SendAsync(GMailerOptions gMailerOptions, string recipient, string subject, string body, AttachmentOptions attachmentOptions = null)
 		{
 			var mailerOptions = GetMailerOptions(gMailerOptions);
-			await GenericMailer.SendAsync(mailerOptions, recipient, subject, body);
+			await GenericMailer.SendAsync(mailerOptions, recipient, subject, body, attachmentOptions);
 		}
 
 		private static MailerOptions GetMailerOptions(GMailerOptions gMailerOptions)
