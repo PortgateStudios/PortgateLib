@@ -26,6 +26,15 @@ namespace PortgateLib.Logger
 		private static readonly int MAX_LOG_COUNT = 30;            // How many logs will be stored without being deleted
 		private static readonly int MESSAGE_SPACING = 96;          // How many right spaces (left aligned) the log message will have
 		private static readonly int STACK_TRACE_SPACING = 128;     // How many right spaces (left aligned) the log stack trace will have
+		private static readonly int MAX_ERROR_PER_SECOND = 30;     // How many errors/exceptions are logged per second before turning off logging.
+
+		private static int errorCountInCurrentSecond;
+		private static int currentSecond;
+
+		private static bool IsSpammingErrors
+		{
+			get { return errorCountInCurrentSecond > MAX_ERROR_PER_SECOND; }
+		}
 
 		private static string _logFile;
 		private static string LogFile
@@ -63,6 +72,38 @@ namespace PortgateLib.Logger
 		}
 
 		private static void OnLogMessageReceived(string log, string stackTrace, LogType type)
+		{
+			if (type == LogType.Error || type == LogType.Exception)
+			{
+				UpdateErrorCounter();
+			}
+
+			if (IsSpammingErrors)
+			{
+				AppendLog("Shutting down Logger due to Exception/Error spamming!", "", LogType.Error);
+				Application.logMessageReceived -= OnLogMessageReceived;
+			}
+			else
+			{
+				AppendLog(log, stackTrace, type);
+			}
+		}
+
+		private static void UpdateErrorCounter()
+		{
+			var nowSecond = DateTime.Now.Second;
+			if (currentSecond == nowSecond)
+			{
+				errorCountInCurrentSecond++;
+			}
+			else
+			{
+				errorCountInCurrentSecond = 1;
+				currentSecond = nowSecond;
+			}
+		}
+
+		private static void AppendLog(string log, string stackTrace, LogType type)
 		{
 			var now = DateTime.Now;
 			var stringBuilder = new StringBuilder();
