@@ -23,10 +23,9 @@ namespace PortgateLib.Logger
 		}
 
 		private static readonly string LOG_FOLDER_NAME = "Logs";
-		private static readonly int MAX_LOG_COUNT = 1024;          // How many logs will be stored without being deleted
+		private static readonly int MAX_LOG_COUNT = 30;            // How many logs will be stored without being deleted
 		private static readonly int MESSAGE_SPACING = 96;          // How many right spaces (left aligned) the log message will have
 		private static readonly int STACK_TRACE_SPACING = 128;     // How many right spaces (left aligned) the log stack trace will have
-
 
 		private static string _logFile;
 		private static string LogFile
