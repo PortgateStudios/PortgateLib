@@ -11,7 +11,7 @@ namespace PortgateLib
 		public string ApplicationVersion => Application.version;
 		public string ApplicationPlatform => Application.platform.ToString();
 		public string ApplicationScene => SceneManager.GetActiveScene().name;
-		public string Time => System.DateTime.Now.ToUniversalTime().ToString();
+		public string Time => System.DateTime.Now.ToUniversalTime().ToString("yyyy-MM-dd HH:mm:ss");
 		public string DeviceModel => SystemInfo.deviceModel;
 		public string DeviceName => SystemInfo.deviceName;
 		public string DeviceType => SystemInfo.deviceType.ToString();
