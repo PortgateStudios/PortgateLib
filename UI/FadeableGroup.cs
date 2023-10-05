@@ -297,5 +297,10 @@ namespace PortgateLib.UI
 			tween = null;
 			onFadeFinishedCallback?.Invoke();
 		}
+
+		protected virtual void OnDestroy()
+		{
+			tween?.Kill();
+		}
 	}
 }
