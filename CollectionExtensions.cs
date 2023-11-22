@@ -27,6 +27,11 @@ namespace PortgateLib
 			return result;
 		}
 
+		public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> enumerable)
+		{
+			return enumerable.OrderBy(x => Random.value);
+		}
+
 		public static T GetRandomElement<T>(this List<T> list)
 		{
 			return list.ToArray().GetRandomElement();
@@ -36,6 +41,12 @@ namespace PortgateLib
 		{
 			var index = Random.Range(0, array.Length);
 			return array[index];
+		}
+
+		public static T GetRandomElement<T>(this IEnumerable<T> enumerable)
+		{
+			var index = Random.Range(0, enumerable.Count());
+			return enumerable.ElementAt(index);
 		}
 
 		public static List<T> GetRandomElements<T>(this List<T> list, int count, bool distinct)
@@ -58,6 +69,18 @@ namespace PortgateLib
 					result[i] = array.GetRandomElement();
 				}
 				return result;
+			}
+		}
+
+		public static IEnumerable<T> GetRandomElements<T>(this IEnumerable<T> enumerable, int count, bool distinct)
+		{
+			if (distinct)
+			{
+				return enumerable.Shuffle().Take(count);
+			}
+			else
+			{
+				return Enumerable.Range(0, count).Select(_ => enumerable.GetRandomElement());
 			}
 		}
 
