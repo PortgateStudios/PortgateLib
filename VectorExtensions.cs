@@ -11,58 +11,58 @@ namespace PortgateLib
 
 		public static Vector2 ToVector2XZ(this Vector3 vector)
 		{
-			return new Vector2(vector.x, vector.z);
+			return new(vector.x, vector.z);
 		}
 
 		public static Vector2 ToVector2XY(this Vector3 vector)
 		{
-			return new Vector2(vector.x, vector.y);
+			return new(vector.x, vector.y);
 		}
 
 		// Vector2 Converters
 
 		public static Vector3 ToVector3XZ(this Vector2 vector)
 		{
-			return new Vector3(vector.x, 0, vector.y);
+			return new(vector.x, 0, vector.y);
 		}
 
 		public static Vector3 ToVector3XY(this Vector2 vector)
 		{
-			return new Vector3(vector.x, vector.y, 0);
+			return new(vector.x, vector.y, 0);
 		}
 
 		// Vector3Int Converters
 
 		public static Vector3 ToVector3(this Vector3Int vector)
 		{
-			return new Vector3(vector.x, vector.y, vector.z);
+			return new(vector.x, vector.y, vector.z);
 		}
 
 		public static Vector2Int ToVector2IntXY(this Vector3Int vector)
 		{
-			return new Vector2Int(vector.x, vector.y);
+			return new(vector.x, vector.y);
 		}
 
 		// Vector2Int Converters
 
 		public static Vector2 ToVector2(this Vector2Int vector)
 		{
-			return new Vector2(vector.x, vector.y);
+			return new(vector.x, vector.y);
 		}
 
 		public static Vector3 ToVector3XZ(this Vector2Int vector)
 		{
-			return new Vector3(vector.x, 0, vector.y);
+			return new(vector.x, 0, vector.y);
 		}
 
 		public static Vector3 ToVector3XY(this Vector2Int vector)
 		{
-			return new Vector3(vector.x, vector.y, 0);
+			return new(vector.x, vector.y, 0);
 		}
 
 		public static Vector3Int ToVector3IntXY(this Vector2Int vector)
 		{
-			return new Vector3Int(vector.x, vector.y, 0);
+			return new(vector.x, vector.y, 0);
 		}
 
 		#endregion
@@ -70,12 +70,12 @@ namespace PortgateLib
 
 		public static Vector2 Opposite(this Vector2 vector)
 		{
-			return new Vector2(-vector.x, -vector.y);
+			return new(-vector.x, -vector.y);
 		}
 
 		public static Vector2Int Opposite(this Vector2Int vector)
 		{
-			return new Vector2Int(-vector.x, -vector.y);
+			return new(-vector.x, -vector.y);
 		}
 
 		#endregion
@@ -83,17 +83,17 @@ namespace PortgateLib
 
 		public static Vector3 WithX(this Vector3 vector, float x)
 		{
-			return new Vector3(x, vector.y, vector.z);
+			return new(x, vector.y, vector.z);
 		}
 
 		public static Vector3 WithY(this Vector3 vector, float y)
 		{
-			return new Vector3(vector.x, y, vector.z);
+			return new(vector.x, y, vector.z);
 		}
 
 		public static Vector3 WithZ(this Vector3 vector, float z)
 		{
-			return new Vector3(vector.x, vector.y, z);
+			return new(vector.x, vector.y, z);
 		}
 
 		#endregion
@@ -198,24 +198,14 @@ namespace PortgateLib
 				normalizedIntegerAngle += 360;
 			}
 
-			Tuple<int, int> sincos;
-			switch (normalizedIntegerAngle)
+			var sincos = normalizedIntegerAngle switch
 			{
-				case 0:
-					sincos = new Tuple<int, int>(0, 1);
-					break;
-				case 90:
-					sincos = new Tuple<int, int>(1, 0);
-					break;
-				case 180:
-					sincos = new Tuple<int, int>(0, -1);
-					break;
-				case 270:
-					sincos = new Tuple<int, int>(-1, 0);
-					break;
-				default:
-					throw new Exception($"Wanted to rotate a Vector2Int into a Vector2Int with invalid angle. ({angle})");
-			}
+				0 => new Tuple<int, int>(0, 1),
+				90 => new Tuple<int, int>(1, 0),
+				180 => new Tuple<int, int>(0, -1),
+				270 => new Tuple<int, int>(-1, 0),
+				_ => throw new Exception($"Wanted to rotate a Vector2Int into a Vector2Int with invalid angle. ({angle})"),
+			};
 
 			dir = new Vector2Int(dir.x * sincos.Item2 - dir.y * sincos.Item1,
 								 dir.x * sincos.Item1 + dir.y * sincos.Item2
