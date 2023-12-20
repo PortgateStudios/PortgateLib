@@ -1,6 +1,6 @@
 {
 	"name": "com.portgatestudios.portgatelib",
-	"version": "1.6.17",
+	"version": "1.6.18",
 	"displayName": "PortgateLib",
 	"description": "Some of my common modules bundled into a package for easier reuse.",
 	"unity": "2021.3",
