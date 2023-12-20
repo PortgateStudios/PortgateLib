@@ -231,7 +231,7 @@ namespace PortgateLib
 
 		private static string GetNullInfo(object obj)
 		{
-			var literallyNull = Object.ReferenceEquals(obj, null);
+			var literallyNull = System.Object.ReferenceEquals(obj, null);
 			var equalsNull = obj == null;
 			return $"<literally null: {literallyNull}, equals null: {equalsNull}>";
 		}
