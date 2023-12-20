@@ -221,12 +221,19 @@ namespace PortgateLib
 
 		public static string TryToString(this object obj)
 		{
-			return obj == null ? "null" : obj.ToString();
+			return obj == null ? GetNullInfo(obj) : obj.ToString();
 		}
 
 		public static string TryGettingName(this MonoBehaviour behaviour)
 		{
-			return behaviour == null ? "null" : behaviour.name;
+			return behaviour == null ? GetNullInfo(behaviour) : behaviour.name;
+		}
+
+		private static string GetNullInfo(object obj)
+		{
+			var literallyNull = Object.ReferenceEquals(obj, null);
+			var equalsNull = obj == null;
+			return $"<literally null: {literallyNull}, equals null: {equalsNull}>";
 		}
 
 		public static string BytesToString(ulong bytes)
