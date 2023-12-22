@@ -219,21 +219,29 @@ namespace PortgateLib
 			return text;
 		}
 
-		public static string TryToString(this object obj)
-		{
-			return obj == null ? GetNullInfo(obj) : obj.ToString();
-		}
-
 		public static string TryGettingName(this MonoBehaviour behaviour)
 		{
 			return behaviour == null ? GetNullInfo(behaviour) : behaviour.name;
 		}
 
-		private static string GetNullInfo(object obj)
+		// We need a more strictly parametrized version for this method, because Unity overrides "== null".
+		// Using the generic version for Unity objects would cast it into an object and the null check would evaulate to false. (Because the reference itself is not null yet, it's just "destroyed".)
+		// Thus the ToString() would be called, which is a "null" string for destroyed Unity objects. It would cause confusion, loss of information, harder debugging, etc.
+		public static string TryToString(this UnityEngine.Object unityObj)
 		{
-			var literallyNull = System.Object.ReferenceEquals(obj, null);
-			var equalsNull = obj == null;
+			return unityObj == null ? GetNullInfo(unityObj) : unityObj.ToString();
+		}
+
+		private static string GetNullInfo(UnityEngine.Object unityObj)
+		{
+			var literallyNull = unityObj is null;
+			var equalsNull = unityObj == null;
 			return $"<literally null: {literallyNull}, equals null: {equalsNull}>";
+		}
+
+		public static string TryToString(this object obj)
+		{
+			return obj == null ? "<null>" : obj.ToString();
 		}
 
 		public static string BytesToString(ulong bytes)
