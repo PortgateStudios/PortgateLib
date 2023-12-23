@@ -86,6 +86,11 @@ namespace PortgateLib.UI
 			canvasGroup = GetComponent<CanvasGroup>();
 		}
 
+		public void Toggle()
+		{
+			SetVisibleInteractable(!IsVisible);
+		}
+
 		public void SetVisibleInteractable(bool visible)
 		{
 			SetVisible(visible);
@@ -203,6 +208,12 @@ namespace PortgateLib.UI
 
 		// Generic Interactibility Fading
 
+		public void InteractibilityToggle(float duration)
+		{
+			var fadeType = IsVisible ? FadeType.Out : FadeType.In;
+			StartInteractibilityFading(fadeType, duration);
+		}
+
 		public void StartInteractibilityFading(FadeType fadeType, float duration, Action onFadeFinishedCallback = null)
 		{
 			StartInteractibilityFading(fadeType, duration, DefaultInProgressFade, DefaultEase, onFadeFinishedCallback);
@@ -227,6 +238,12 @@ namespace PortgateLib.UI
 		}
 
 		// Generic  Fading
+
+		public void Toggle(float duration)
+		{
+			var fadeType = IsVisible ? FadeType.Out : FadeType.In;
+			StartFading(fadeType, duration);
+		}
 
 		public void StartFading(FadeType fadeType, float duration, Action onFadeFinishedCallback = null)
 		{
@@ -290,6 +307,28 @@ namespace PortgateLib.UI
 
 			this.onFadeFinishedCallback = onFadeFinishedCallback;
 			tween.OnComplete(OnFadeFinished);
+
+			OnFadeStarted();
+			if (targetAlpha > Alpha)
+			{
+				OnFadeInStarted();
+			}
+			else
+			{
+				OnFadeOutStarted();
+			}
+		}
+
+		protected virtual void OnFadeStarted()
+		{
+		}
+
+		protected virtual void OnFadeInStarted()
+		{
+		}
+
+		protected virtual void OnFadeOutStarted()
+		{
 		}
 
 		private void OnFadeFinished()
