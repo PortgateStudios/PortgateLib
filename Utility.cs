@@ -219,9 +219,9 @@ namespace PortgateLib
 			return text;
 		}
 
-		public static string TryGettingName(this MonoBehaviour behaviour)
+		public static string TryGettingName(this UnityEngine.Object unityObj)
 		{
-			return behaviour == null ? GetNullInfo(behaviour) : behaviour.name;
+			return unityObj == null ? GetNullInfo(unityObj) : unityObj.name;
 		}
 
 		// We need a more strictly parametrized version for this method, because Unity overrides "== null".
