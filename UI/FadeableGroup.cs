@@ -99,11 +99,13 @@ namespace PortgateLib.UI
 
 		public void SetVisible(bool visible)
 		{
+			canvasGroup.DOKill();
 			canvasGroup.alpha = visible ? 1 : 0;
 		}
 
 		public void SetInteractable(bool interactable)
 		{
+			canvasGroup.DOKill();
 			canvasGroup.interactable = interactable;
 			canvasGroup.blocksRaycasts = interactable;
 		}
