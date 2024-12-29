@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Mail;
@@ -25,13 +26,12 @@ namespace PortgateLib.Mailer
 	public record AttachmentOptions
 	{
 		public string FileName { get; init; }
-		public string Content { get; init; }
+		public byte[] ContentBytes { get; init; } // Raw file content in bytes
+		public string MimeType { get; init; } // e.g., "image/jpeg" or "application/zip" or "application/json"
 	}
 
 	public static class GenericMailer
 	{
-		private const string ATTACHMENT_FILE_NAME = "attachment.json";
-
 		public static void Send(MailerOptions mailerOptions, string recipient, string subject, string body, AttachmentOptions attachmentOptions = null)
 		{
 			using var client = CreateSmtpClient(mailerOptions);
@@ -39,7 +39,21 @@ namespace PortgateLib.Mailer
 			client.Send(msg);
 		}
 
+		public static void Send(MailerOptions mailerOptions, string recipient, string subject, string body, IEnumerable<AttachmentOptions> attachmentOptions = null)
+		{
+			using var client = CreateSmtpClient(mailerOptions);
+			var msg = CreateMailMessage(mailerOptions, recipient, subject, body, attachmentOptions);
+			client.Send(msg);
+		}
+
 		public static async Task SendAsync(MailerOptions mailerOptions, string recipient, string subject, string body, AttachmentOptions attachmentOptions = null)
+		{
+			using var client = CreateSmtpClient(mailerOptions);
+			var msg = CreateMailMessage(mailerOptions, recipient, subject, body, attachmentOptions);
+			await client.SendMailAsync(msg);
+		}
+
+		public static async Task SendAsync(MailerOptions mailerOptions, string recipient, string subject, string body, IEnumerable<AttachmentOptions> attachmentOptions = null)
 		{
 			using var client = CreateSmtpClient(mailerOptions);
 			var msg = CreateMailMessage(mailerOptions, recipient, subject, body, attachmentOptions);
@@ -58,6 +72,11 @@ namespace PortgateLib.Mailer
 
 		private static MailMessage CreateMailMessage(MailerOptions mailerOptions, string recipient, string subject, string body, AttachmentOptions attachmentOptions)
 		{
+			return CreateMailMessage(mailerOptions, recipient, subject, body, new List<AttachmentOptions> { attachmentOptions });
+		}
+
+		private static MailMessage CreateMailMessage(MailerOptions mailerOptions, string recipient, string subject, string body, IEnumerable<AttachmentOptions> attachmentOptionsCollection)
+		{
 			var msg = new MailMessage()
 			{
 				From = new MailAddress(mailerOptions.Email, mailerOptions.Name),
@@ -68,12 +87,17 @@ namespace PortgateLib.Mailer
 
 			msg.To.Add(recipient);
 
-
-			if (attachmentOptions != null)
+			if (attachmentOptionsCollection != null)
 			{
-				var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(attachmentOptions.Content));
-				var attachment = new Attachment(stream, attachmentOptions.FileName);
-				msg.Attachments.Add(attachment);
+				foreach (var attachmentOptions in attachmentOptionsCollection)
+				{
+					if (attachmentOptions != null && attachmentOptions.ContentBytes != null)
+					{
+						var stream = new MemoryStream(attachmentOptions.ContentBytes);
+						var attachment = new Attachment(stream, attachmentOptions.FileName, attachmentOptions.MimeType ?? "application/octet-stream");
+						msg.Attachments.Add(attachment);
+					}
+				}
 			}
 
 			return msg;
