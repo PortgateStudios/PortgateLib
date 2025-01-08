@@ -51,8 +51,8 @@ namespace PortgateLib.Logger
 
 		private static string CreateLogFile()
 		{
-			var now = DateTime.Now;
-			var logFileName = $"{now.Year:0000}.{now.Month:00}.{now.Day:00} - {now.Hour:00}.{now.Minute:00}.{now.Second:00}.log";
+			var utcNow = DateTime.UtcNow;
+			var logFileName = $"{utcNow.Year:0000}.{utcNow.Month:00}.{utcNow.Day:00} - {utcNow.Hour:00}.{utcNow.Minute:00}.{utcNow.Second:00}.log";
 			return Path.Combine(LogDirectory, logFileName);
 		}
 
@@ -105,13 +105,13 @@ namespace PortgateLib.Logger
 
 		private static void AppendLog(string log, string stackTrace, LogType type)
 		{
-			var now = DateTime.Now;
+			var utcNow = DateTime.UtcNow;
 			var stringBuilder = new StringBuilder();
 
 			// Date
-			stringBuilder.Append($"[ {now.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture)} ]");
+			stringBuilder.Append($"[ {utcNow.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture)} ]");
 			// Time
-			stringBuilder.Append($" [ {now.ToLongTimeString()} ]");
+			stringBuilder.Append($" [ {utcNow.ToLongTimeString()} ]");
 			// Type
 			stringBuilder.Append($" {Formatter.AlignLeftBetweenBrackets(type.ToString(), 11)}");
 			// Message
