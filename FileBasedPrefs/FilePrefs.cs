@@ -1,11 +1,13 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using UnityEngine;
 
 namespace PortgateLib.FileBasedPrefs
 {
 	public static class FilePrefs
 	{
+		private static readonly object fileLock = new();
 		private static string saveFileName = "save.sfg";
 		private static bool autoSave = true;
 		private static bool prettyPrint = true;
@@ -208,15 +210,58 @@ namespace PortgateLib.FileBasedPrefs
 				WriteToSaveFile(JsonUtility.ToJson(GetSaveFile(), prettyPrint));
 			}
 		}
+
 		private static void WriteToSaveFile(string data)
 		{
-			var tw = new StreamWriter(GetSaveFilePath());
-			if (scrambleData)
+			if (Monitor.TryEnter(fileLock, TimeSpan.FromMilliseconds(500)))
 			{
-				data = DataScrambler(data);
+				try
+				{
+					if (scrambleData)
+					{
+						data = DataScrambler(data);
+					}
+
+					var filePath = GetSaveFilePath();
+					var tempFilePath = $"{filePath}.tmp";
+					var backupFilePath = $"{filePath}.backup";
+
+					var maxAttemptCount = 5;
+					var attemptDelayMs = 100;
+
+					for (var attempt = 1; attempt <= maxAttemptCount; attempt++)
+					{
+						try
+						{
+							using (var tw = new StreamWriter(tempFilePath))
+							{
+								tw.Write(data);
+							}
+
+							File.Replace(tempFilePath, filePath, backupFilePath);
+							break;
+						}
+						catch (IOException ex)
+						{
+							if (attempt == maxAttemptCount)
+							{
+								Debug.LogError($"Failed to write to save file: {ex.Message}");
+								throw;
+							}
+
+							Thread.Sleep(attemptDelayMs);
+						}
+					}
+				}
+				finally
+				{
+					Monitor.Exit(fileLock);
+				}
 			}
-			tw.Write(data);
-			tw.Close();
+			else
+			{
+				Debug.LogError("Could not acquire file lock; skipping save operation.");
+			}
 		}
 
 		#endregion
