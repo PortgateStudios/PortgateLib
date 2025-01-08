@@ -8,6 +8,7 @@ namespace PortgateLib.FileBasedPrefs
 	{
 		private static string saveFileName = "save.sfg";
 		private static bool autoSave = true;
+		private static bool prettyPrint = true;
 		private static bool scrambleData;
 		private static string scrambleKey;
 		private static FilePrefsData latestData;
@@ -16,17 +17,18 @@ namespace PortgateLib.FileBasedPrefs
 
 		#region Initialisation
 
-		public static void Init(string saveFileName, bool autoSave)
+		public static void Init(string saveFileName, bool autoSave = true, bool prettyPrint = true)
 		{
 			FilePrefs.saveFileName = saveFileName;
 			FilePrefs.autoSave = autoSave;
+			FilePrefs.prettyPrint = prettyPrint;
 		}
 
-		public static void Init(string saveFileName, bool autoSave, bool scrambleData, string encryptionKey)
+		public static void Init(string saveFileName, bool autoSave, bool prettyPrint, bool scrambleData, string scrambleKey)
 		{
-			Init(saveFileName, FilePrefs.autoSave);
+			Init(saveFileName, autoSave, prettyPrint);
 			FilePrefs.scrambleData = scrambleData;
-			FilePrefs.scrambleKey = encryptionKey;
+			FilePrefs.scrambleKey = scrambleKey;
 		}
 
 		#endregion
@@ -43,32 +45,32 @@ namespace PortgateLib.FileBasedPrefs
 			return (string)GetDataFromSaveFile(key, defaultValue);
 		}
 
-		public static void SetInt(string key, int value = default(int))
+		public static void SetInt(string key, int value = default)
 		{
 			AddDataToSaveFile(key, value);
 		}
 
-		public static int GetInt(string key, int defaultValue = default(int))
+		public static int GetInt(string key, int defaultValue = default)
 		{
 			return (int)GetDataFromSaveFile(key, defaultValue);
 		}
 
-		public static void SetFloat(string key, float value = default(float))
+		public static void SetFloat(string key, float value = default)
 		{
 			AddDataToSaveFile(key, value);
 		}
 
-		public static float GetFloat(string key, float defaultValue = default(float))
+		public static float GetFloat(string key, float defaultValue = default)
 		{
 			return (float)GetDataFromSaveFile(key, defaultValue);
 		}
 
-		public static void SetBool(string key, bool value = default(bool))
+		public static void SetBool(string key, bool value = default)
 		{
 			AddDataToSaveFile(key, value);
 		}
 
-		public static bool GetBool(string key, bool defaultValue = default(bool))
+		public static bool GetBool(string key, bool defaultValue = default)
 		{
 			return (bool)GetDataFromSaveFile(key, defaultValue);
 		}
@@ -130,7 +132,7 @@ namespace PortgateLib.FileBasedPrefs
 
 		public static void DeleteAll()
 		{
-			WriteToSaveFile(JsonUtility.ToJson(new FilePrefsData()));
+			CreateNewSaveFile();
 			latestData = new FilePrefsData();
 		}
 
@@ -203,7 +205,7 @@ namespace PortgateLib.FileBasedPrefs
 		{
 			if (autoSave || manualSave)
 			{
-				WriteToSaveFile(JsonUtility.ToJson(GetSaveFile()));
+				WriteToSaveFile(JsonUtility.ToJson(GetSaveFile(), prettyPrint));
 			}
 		}
 		private static void WriteToSaveFile(string data)
@@ -236,7 +238,7 @@ namespace PortgateLib.FileBasedPrefs
 
 		private static void CreateNewSaveFile()
 		{
-			WriteToSaveFile(JsonUtility.ToJson(new FilePrefsData()));
+			WriteToSaveFile(JsonUtility.ToJson(new FilePrefsData(), prettyPrint));
 		}
 
 		private static string DataScrambler(string data)
