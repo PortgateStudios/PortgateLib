@@ -24,7 +24,7 @@ namespace PortgateLib.UI
 	public class FadeableGroup : MonoBehaviour
 	{
 		public const Ease DefaultEase = Ease.Unset;
-		public const InProgressFade DefaultInProgressFade = InProgressFade.Complete;
+		public const InProgressFade DefaultInProgressFade = InProgressFade.Complete; // Because Kill is dangerous: OnFinished won't be dispatched.
 
 		public Ease FadeInEase
 		{
@@ -88,7 +88,7 @@ namespace PortgateLib.UI
 
 		public void Toggle()
 		{
-			SetVisibleInteractable(!IsVisible);
+			SetVisibleInteractable(!IsInteractable);
 		}
 
 		public void SetVisibleInteractable(bool visible)
@@ -210,10 +210,10 @@ namespace PortgateLib.UI
 
 		// Generic Interactibility Fading
 
-		public void InteractibilityToggle(float duration)
+		public void InteractibilityToggle(float duration, InProgressFade inProgressFade = DefaultInProgressFade)
 		{
-			var fadeType = IsVisible ? FadeType.Out : FadeType.In;
-			StartInteractibilityFading(fadeType, duration);
+			var fadeType = IsInteractable ? FadeType.Out : FadeType.In;
+			StartInteractibilityFading(fadeType, duration, inProgressFade);
 		}
 
 		public void StartInteractibilityFading(FadeType fadeType, float duration, Action onFadeFinishedCallback = null)
@@ -241,10 +241,10 @@ namespace PortgateLib.UI
 
 		// Generic  Fading
 
-		public void Toggle(float duration)
+		public void Toggle(float duration, InProgressFade inProgressFade = DefaultInProgressFade)
 		{
-			var fadeType = IsVisible ? FadeType.Out : FadeType.In;
-			StartFading(fadeType, duration);
+			var fadeType = IsInteractable ? FadeType.Out : FadeType.In;
+			StartFading(fadeType, duration, inProgressFade);
 		}
 
 		public void StartFading(FadeType fadeType, float duration, Action onFadeFinishedCallback = null)
