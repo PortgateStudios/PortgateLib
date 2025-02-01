@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using System.Security.Cryptography;
+using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -145,9 +146,9 @@ namespace PortgateLib
 			return rotatedTexture;
 		}
 
-		public static T[] GetEnumValues<T>()
+		public static IEnumerable<T> GetEnumValues<T>()
 		{
-			return Enum.GetValues(typeof(T)).Cast<T>().ToArray();
+			return Enum.GetValues(typeof(T)).Cast<T>();
 		}
 
 		public static void DestroyChildren(this Transform transform)

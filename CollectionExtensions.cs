@@ -7,40 +7,18 @@ namespace PortgateLib
 {
 	public static class CollectionExtensions
 	{
-		public static List<T> Shuffle<T>(this List<T> list)
+		public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> collection)
 		{
-			return list.ToArray().Shuffle().ToList();
-		}
-
-		public static T[] Shuffle<T>(this T[] array)
-		{
+			var array = collection.ToArray();
 			int n = array.Length;
 			var result = new T[n];
 			array.CopyTo(result, 0);
 			while (n > 1)
 			{
-				int k = Random.Range(0, n--);
-				T temp = result[n];
-				result[n] = result[k];
-				result[k] = temp;
+				var k = Random.Range(0, n--);
+				(result[k], result[n]) = (result[n], result[k]);
 			}
 			return result;
-		}
-
-		public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> enumerable)
-		{
-			return enumerable.OrderBy(x => Random.value);
-		}
-
-		public static T GetRandomElement<T>(this List<T> list)
-		{
-			return list.ToArray().GetRandomElement();
-		}
-
-		public static T GetRandomElement<T>(this T[] array)
-		{
-			var index = Random.Range(0, array.Length);
-			return array[index];
 		}
 
 		public static T GetRandomElement<T>(this IEnumerable<T> enumerable)
@@ -49,38 +27,21 @@ namespace PortgateLib
 			return enumerable.ElementAt(index);
 		}
 
-		public static List<T> GetRandomElements<T>(this List<T> list, int count, bool distinct)
-		{
-			return list.ToArray().GetRandomElements(count, distinct).ToList();
-		}
-
-		public static T[] GetRandomElements<T>(this T[] array, int count, bool distinct)
+		public static IEnumerable<T> GetRandomElements<T>(this IEnumerable<T> collection, int count, bool distinct)
 		{
 			if (distinct)
 			{
-				var shuffledArray = array.Shuffle();
-				return shuffledArray.Take(count).ToArray();
+				var shuffledCollection = collection.Shuffle();
+				return shuffledCollection.Take(count);
 			}
 			else
 			{
 				var result = new T[count];
 				for (var i = 0; i < count; i++)
 				{
-					result[i] = array.GetRandomElement();
+					result[i] = collection.GetRandomElement();
 				}
 				return result;
-			}
-		}
-
-		public static IEnumerable<T> GetRandomElements<T>(this IEnumerable<T> enumerable, int count, bool distinct)
-		{
-			if (distinct)
-			{
-				return enumerable.Shuffle().Take(count);
-			}
-			else
-			{
-				return Enumerable.Range(0, count).Select(_ => enumerable.GetRandomElement());
 			}
 		}
 
@@ -128,14 +89,22 @@ namespace PortgateLib
 			return -1;
 		}
 
-		public static int GetLastIndex<T>(this List<T> list)
+		public static int GetLastIndex<T>(this IEnumerable<T> enumerable)
 		{
-			return list.Count - 1;
-		}
-
-		public static int GetLastIndex<T>(this T[] array)
-		{
-			return array.Length - 1;
+			if (enumerable is ICollection<T> collection)
+			{
+				return collection.Count - 1;
+			}
+			else if (enumerable is IReadOnlyCollection<T> readOnlyCollection)
+			{
+				return readOnlyCollection.Count - 1;
+			}
+			else
+			{
+				// Fallback for other IEnumerable<T> types (e.g., LINQ queries)
+				// Note: This will enumerate the sequence, which can be inefficient for large or infinite sequences
+				return enumerable.Count() - 1;
+			}
 		}
 
 		public static T Pop<T>(this List<T> list)

@@ -125,11 +125,11 @@ namespace PortgateLib.Logger
 
 		private static void DeleteLogsIfMaximumExceeded()
 		{
-			var files = Directory.GetFiles(LogDirectory).OrderBy(fileName => fileName).ToArray();
-			var filesToDelete = Mathf.Clamp(files.Length - MAX_LOG_COUNT, 0, int.MaxValue);
+			var files = Directory.GetFiles(LogDirectory).OrderBy(fileName => fileName);
+			var filesToDelete = Mathf.Clamp(files.Count() - MAX_LOG_COUNT, 0, int.MaxValue);
 			for (var i = 0; i < filesToDelete; i++)
 			{
-				File.Delete(files[i]);
+				File.Delete(files.ElementAt(i));
 			}
 		}
 	}

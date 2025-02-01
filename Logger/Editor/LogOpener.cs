@@ -10,9 +10,9 @@ namespace PortgateLib.Logger
 		[MenuItem("PortgateLib/Open Last Log")]
 		private static void OpenLastLog()
 		{
-			var files = Directory.GetFiles(Logger.LogDirectory).OrderBy(fileName => fileName).ToArray();
+			var files = Directory.GetFiles(Logger.LogDirectory).OrderBy(fileName => fileName);
 
-			if (files.Length <= 0)
+			if (files.Count() <= 0)
 			{
 				Debug.LogError("There is no logs available");
 				return;
