@@ -201,14 +201,20 @@ namespace PortgateLib
 			return integer % multiplier == 0;
 		}
 
-		public static string GetPath(this GameObject gameObject)
+		public static string GetPath(this Transform transform, int depth = 999, bool pretty = true)
 		{
-			var path = $"{gameObject.name}";
-			var parent = gameObject.transform.parent;
-			while (parent != null)
+			var path = transform.name;
+			for (var i = 0; i < depth; i++)
 			{
-				path = $"{parent.name}/{path}";
-				parent = parent.parent;
+				var parent = transform.parent;
+				var parentName = parent != null ? parent.name : "root";
+				var separator = pretty ? " / " : "/";
+				path = $"{parentName}{separator}{path}";
+				transform = parent;
+				if (transform == null)
+				{
+					break;
+				}
 			}
 			return path;
 		}
