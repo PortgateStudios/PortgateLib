@@ -201,6 +201,11 @@ namespace PortgateLib
 			return integer % multiplier == 0;
 		}
 
+		public static string GetPath(this GameObject gameObject, int depth = 999, bool pretty = true)
+		{
+			return gameObject.transform.GetPath(depth, pretty);
+		}
+
 		public static string GetPath(this Transform transform, int depth = 999, bool pretty = true)
 		{
 			var path = transform.name;
