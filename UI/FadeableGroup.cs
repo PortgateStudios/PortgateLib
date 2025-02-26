@@ -277,14 +277,14 @@ namespace PortgateLib.UI
 			{
 				if (InPunchStrength.HasValue)
 				{
-					RectTransform.Punch(InPunchStrength.Value, duration);
+					RectTransform.CompleteAndPunch(InPunchStrength.Value, duration);
 				}
 			}
 			else
 			{
 				if (OutPunchStrength.HasValue)
 				{
-					RectTransform.Punch(OutPunchStrength.Value, duration);
+					RectTransform.CompleteAndPunch(OutPunchStrength.Value, duration);
 				}
 			}
 

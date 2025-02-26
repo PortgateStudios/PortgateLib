@@ -6,16 +6,26 @@ namespace PortgateLib
 {
 	public static class TweenUtility
 	{
-		public static Tweener Punch(this RectTransform rectTransform, float strength, float duration, Action onComplete = null)
+		public static Tweener CompleteAndPunch(this RectTransform rectTransform, float strength, float duration, Action onComplete = null)
 		{
-			return rectTransform.Punch(strength, duration, 2, onComplete);
+			return rectTransform.CompleteAndPunch(strength, duration, 2, onComplete);
 		}
 
-		public static Tweener Punch(this RectTransform rectTransform, float strength, float duration, int vibration, Action onComplete = null)
+		public static Tweener CompleteAndPunch(this RectTransform rectTransform, float strength, float duration, int vibration, Action onComplete = null)
+		{
+			return rectTransform.CompleteAndPunch(strength, duration, vibration, onComplete);
+		}
+
+		public static Tweener CompleteAndPunch(this Transform transform, float strength, float duration, Action onComplete = null)
+		{
+			return transform.CompleteAndPunch(strength, duration, 2, onComplete);
+		}
+
+		public static Tweener CompleteAndPunch(this Transform transform, float strength, float duration, int vibration, Action onComplete = null)
 		{
 			var punch = Vector3.one * strength;
-			rectTransform.DOComplete();
-			return rectTransform.DOPunchScale(punch, duration, vibration).OnComplete(() => onComplete?.Invoke());
+			transform.DOComplete();
+			return transform.DOPunchScale(punch, duration, vibration).OnComplete(() => onComplete?.Invoke());
 		}
 	}
 }
