@@ -238,7 +238,14 @@ namespace PortgateLib.FileBasedPrefs
 								tw.Write(data);
 							}
 
-							File.Replace(tempFilePath, filePath, backupFilePath);
+							if (File.Exists(filePath))
+							{
+								File.Replace(tempFilePath, filePath, backupFilePath);
+							}
+							else
+							{
+								File.Copy(tempFilePath, filePath);
+							}
 							break;
 						}
 						catch (IOException ex)
